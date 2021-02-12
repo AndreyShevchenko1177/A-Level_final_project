@@ -1,18 +1,22 @@
+import React from "react";
 import "./App.css";
 import {
-    BrowserRouter as Router,
+    // BrowserRouter as Router, // https://stackoverflow.com/questions/42701129/how-to-push-to-history-in-react-router-v4
+    Router,
     Route,
     Link,
+    Switch,
     NavLink,
+    Redirect,
 } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
+import history from "./history";
 import logo from "./images/logo23.jpg";
 
 const Logo = () => <img src={logo} width="50px" />;
 
 const Header = () => (
     <div>
-        Header
+        <b>Header</b>
         <Link to={"/"}>
             <Logo />
         </Link>
@@ -34,36 +38,100 @@ const MenuItem = ({ url, text }) => (
 
 const Sidebar = () => (
     <aside>
-        Sidebar
+        <b>Sidebar</b>
         <nav>
             <ul>
                 {Object.entries(menuItems).map(([url, text]) => (
-                    <MenuItem url={url} text={text} />
+                    <MenuItem url={url} text={text} key={url} />
                 ))}
             </ul>
         </nav>
     </aside>
 );
 
-const ChatContent = () => <aside>ChatContent</aside>;
+const ChatsList = () => (
+    <aside>
+        <b>ChatsList</b> <br />
+        chat1 <br />
+        chat2 <br />
+        chat3 <br />
+        chat4 <br />
+    </aside>
+);
+
+const ChatContain = () => (
+    <aside>
+        <b>ChatContain</b> <br />
+        message1 <br />
+        message2 <br />
+        message3 <br />
+        message4 <br />
+        message5 <br />
+    </aside>
+);
 
 const PageMain = () => (
     <div>
         <Sidebar />
-        <ChatContent />
+        <ChatsList />
+        <ChatContain />
     </div>
 );
 
-const PageLogin = () => <div>PageLogin</div>;
+const LoginForm = () => (
+    <div>
+        <input></input>
+        <button
+            onClick={() => {
+                console.log("лагин");
+                history.push("/main");
+            }}
+        >
+            Login
+        </button>
+    </div>
+);
 
-const Footer = () => <div>Footer</div>;
+const PageLogin = () => (
+    <div>
+        <b>PageLogin</b>
+        <LoginForm />
+    </div>
+);
+
+const Footer = () => (
+    <div>
+        <b>Footer</b>
+    </div>
+);
+
+const PageSettings = () => <div>PageSettings</div>;
+const PageNewChat = () => <div>PageNewChat</div>;
+const PageSerchChat = () => <div>PageSerchChat</div>;
+const PageNotFound = () => {
+    setTimeout(() => {
+        history.push("/main");
+    }, 3000);
+    return (
+        <div>
+            <b>404</b>
+        </div>
+    );
+};
 
 const App = () => (
-    <Router history={createHistory()}>
+    <Router history={history}>
         <Header />
         <div>
-            <Route path="/main" component={PageMain} exact />
-            <Route path="/" component={PageLogin} exact />
+            <Switch>
+                <Route path="/main" component={PageMain} exact />
+                <Redirect from="/aboutus" to="/main" exact />
+                <Route path="/settings" component={PageSettings} exact />
+                <Route path="/newchat" component={PageNewChat} exact />
+                <Route path="/serchChat" component={PageSerchChat} exact />
+                <Route path="/" component={PageLogin} exact />
+                <Route component={PageNotFound} exact />
+            </Switch>
         </div>
         <Footer />
     </Router>

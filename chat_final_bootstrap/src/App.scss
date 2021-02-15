@@ -1,0 +1,32 @@
+div {
+    border-radius: 5px;
+    border: 1px solid red;
+}
+
+ul {
+    border-radius: 5px;
+    border: 1px solid green;
+}
+
+.LoginForm {
+    background-color: lightgreen;
+}
+
+.LoginInfo {
+    background-color: lemonchiffon;
+    img {
+        width: 80px;
+    }
+}
+
+.PageMain {
+    background-color: lightskyblue;
+    div {
+        .Sidebar {
+            background-color: green;
+        }
+        .ChatContain {
+            background-color: hotpink;
+        }
+    }
+}

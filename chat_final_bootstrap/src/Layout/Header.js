@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { CButtonLogout } from "../Components";
-import { CYourLogin } from "../Components";
+import { CDashBoardLink } from "../Components";
 import { connect } from "react-redux";
 
 import logo from "../images//logo23.jpg";
@@ -19,7 +19,7 @@ export const Header = () => (
         <Link to={`/`}>
             <CLogo />
         </Link>
-        <CYourLogin />
+        <CDashBoardLink />
         <CButtonLogout />
     </div>
 );

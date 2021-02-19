@@ -20,7 +20,7 @@ import { store } from "./Reducers";
 
 const PageNotFound = () => {
     setTimeout(() => {
-        history.push("/main");
+        history.push("/");
     }, 3000);
     return (
         <div>

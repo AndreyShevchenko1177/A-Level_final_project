@@ -1,11 +1,11 @@
-div {
-    border-radius: 5px;
-    border: 1px solid red;
+.mainWrapper {
+    max-height: 800px;
+    overflow: auto;
 }
 
-ul {
-    border-radius: 5px;
-    border: 1px solid green;
+div {
+    border-radius: 7px;
+    border: 1px solid red;
 }
 
 .LoginForm {
@@ -23,10 +23,19 @@ ul {
     background-color: lightskyblue;
     div {
         .Sidebar {
-            background-color: green;
+            background-color: lightgreen;
         }
         .ChatContain {
-            background-color: hotpink;
+            background-color: lightpink;
         }
+    }
+}
+
+.ChatItem {
+    img {
+        max-width: 50px;
+    }
+    p {
+        font-weight: 700;
     }
 }

@@ -11,9 +11,12 @@ import {
     Redirect,
 } from "react-router-dom";
 import history from "./history";
-
+import { Provider, connect } from "react-redux";
 import { Header, Footer } from "./Layout";
-import { PageMain, PageLogin, PageNewChat } from "./Pages";
+import { CPageMain, PageLogin, PageNewChat } from "./Pages";
+import { actionFindChatsByUserId } from "./Actions";
+
+import { store } from "./Reducers";
 
 const PageNotFound = () => {
     setTimeout(() => {
@@ -27,19 +30,24 @@ const PageNotFound = () => {
 };
 
 const App = () => (
-    <Router history={history}>
-        <Header />
-        <div>
-            <Switch>
-                <Route path="/main" component={PageMain} exact />
-                <Redirect from="/aboutus" to="/main" exact />
-                <Route path="/newchat" component={PageNewChat} exact />
-                <Route path="/" component={PageLogin} exact />
-                <Route component={PageNotFound} exact />
-            </Switch>
-        </div>
-        <Footer />
-    </Router>
+    <Provider store={store}>
+        <Router history={history}>
+            <div className="mainWrapper">
+                <Header />
+                <div>
+                    <Switch>
+                        <Redirect from="/aboutus" to="/main" exact />
+                        <Route path="/newchat" component={PageNewChat} exact />
+                        <Route path="/" component={PageLogin} exact />
+                        <Route path="/main/:_userId" component={CPageMain} exact />
+
+                        <Route component={PageNotFound} exact />
+                    </Switch>
+                </div>
+                <Footer />
+            </div>
+        </Router>
+    </Provider>
 );
 
 export default App;

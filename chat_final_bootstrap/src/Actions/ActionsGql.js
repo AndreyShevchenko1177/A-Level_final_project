@@ -117,6 +117,7 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
                 ChatFind(query:$query) {
                     _id
                     title
+                    createdAt
                     avatar {url}
                     messages {_id createdAt}
               }

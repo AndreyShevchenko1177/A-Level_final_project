@@ -3,12 +3,14 @@ import { connect } from "react-redux";
 import { urlConst } from "../const";
 import { Link } from "react-router-dom";
 
-const ChatItem = ({ _id = "", avatarUrl, title = "no title", userId }) => (
+const ChatItem = ({ _id = "", avatar, title = "no title", messages, userId }) => (
     <Link to={`/main/${userId}/${_id}`}>
         <div className="ChatItem">
-            <img src={avatarUrl ? `${urlConst}/${avatarUrl}}` : logo}></img>
+            <img src={avatar && avatar.url ? `${urlConst}/${avatar.url}}` : logo}></img>
             <p>Title: {title}</p>
-            chatID: {_id}
+            <span>Count of msg: {messages && messages.length ? messages.length : 0}</span>
+            <br />
+            <span> chatID: {_id}</span>
         </div>
     </Link>
 );
@@ -19,13 +21,22 @@ const List = ({ arrayOfChats, userId }) => {
     // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
     // чаты без сообщений отправляются в конец списка
     // на сервере сделать такую сортировку не получается
+    // arrayOfChats.sort((a, b) => {
+    //     if (!a.messages) return 1;
+    //     if (!b.messages) return -1;
+    //     return +b.messages[b.messages.length - 1].createdAt - +a.messages[a.messages.length - 1].createdAt;
+    // });
+
+    // сортировка вариант2:
+    // за последнюю дату чата принимается дата последнего сообщения либо если нет сообщений,
+    // то дата создания чата
     arrayOfChats.sort((a, b) => {
-        if (!a.messages) return 1;
-        if (!b.messages) return -1;
-        return +b.messages[b.messages.length - 1].createdAt - +a.messages[a.messages.length - 1].createdAt;
+        a = a.messages && a.messages.length ? a.messages[a.messages.length - 1].createdAt : a.createdAt;
+        b = b.messages && b.messages.length ? b.messages[b.messages.length - 1].createdAt : b.createdAt;
+        return +b - +a;
     });
 
-    // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
+    console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
 
     return (
         <div>

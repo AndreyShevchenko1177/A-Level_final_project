@@ -39,6 +39,7 @@ const App = () => (
                         <Redirect from="/aboutus" to="/main" exact />
                         <Route path="/newchat" component={PageNewChat} exact />
                         <Route path="/" component={PageLogin} exact />
+                        <Route path="/main/:_userId/:_chatId" component={CPageMain} exact />
                         <Route path="/main/:_userId" component={CPageMain} exact />
 
                         <Route component={PageNotFound} exact />

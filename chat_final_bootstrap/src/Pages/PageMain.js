@@ -2,20 +2,32 @@ import { ChatContain } from "../Components";
 import { Sidebar } from "../Layout";
 import { store } from "../Reducers";
 import history from "../history";
-import { actionFindChatsByUserId } from "../Actions";
+import { actionFindChatsByUserId, actionFindMessagesByChatId } from "../Actions";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 
 //prettier-ignore
-const PageMain = ( {match: { params: { _userId } } , getData = 555}) => {
-    const [userId, setUserId] = useState(_userId)
+const PageMain = ({
+    match: {
+        params: { _userId, _chatId },
+    },
+    getChatList = null,
+    getMesagesList = null,
+}) => {
+
+    console.log("PageMain.js. - True _chatId: ", _chatId);
 
     useEffect(() => {
-        if (typeof getData === "function") {
-            setUserId(_userId);
-            getData(_userId)
+        if (typeof getChatList === "function") {
+            getChatList(_userId);
         }
-    }, [_userId])
+    }, [_userId]);
+
+    useEffect(() => {
+        if (typeof getMesagesList === "function") {
+            getMesagesList(_chatId);
+        }
+    }, [_chatId]);
 
     if (
         //FIXME: надо засунуть router в redux
@@ -27,8 +39,9 @@ const PageMain = ( {match: { params: { _userId } } , getData = 555}) => {
         history.push("/");
     }
 
-    //FIXME: это временный липовый _id
-    _userId = "5e25e0a41719bf13be585729";
+    //FIXME: это временные _id
+    _userId = "5e97105693e2915e617c6fc1";  // login "Antipmen"
+    // if (_chatId) _chatId = "5e9ff91fd265602706d735cd"; // title "community"
 
     // if (typeof getData === "function") getData(_userId);
 
@@ -40,11 +53,14 @@ const PageMain = ( {match: { params: { _userId } } , getData = 555}) => {
                     <Sidebar />
                 </div>
                 <div className="col-md-8">
-                    <ChatContain />
+                    <ChatContain _chatId={ _chatId}/>
                 </div>
             </div>
         </div>
     );
 };
 
-export const CPageMain = connect(null, { getData: actionFindChatsByUserId })(PageMain);
+export const CPageMain = connect(null, {
+    getChatList: actionFindChatsByUserId,
+    getMesagesList: actionFindMessagesByChatId,
+})(PageMain);

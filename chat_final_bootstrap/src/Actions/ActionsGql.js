@@ -20,9 +20,9 @@ export const gql = getGQL(urlConst);
 export const actionFindChatsByUserId = (_userId) => async (dispatch) => {
     let chatList = await dispatch(
         actionPromise(
-            "chatsList",
+            "userFindOne",
             gql(
-                `query FindChatsByUserId($randomId: String) {
+                `query UserFindOne($randomId: String) {
                     UserFindOne(query: $randomId) {
                         login
                         _id
@@ -38,4 +38,66 @@ export const actionFindChatsByUserId = (_userId) => async (dispatch) => {
         )
     );
     // console.log(chatList);
+};
+
+export const actionFindMessagesByChatId = (_chatId) => async (dispatch) => {
+    let ChatFindOne = await dispatch(
+        actionPromise(
+            "chatFindOne",
+            gql(
+                `query ChatFindOne($chatId: String) {
+                    ChatFindOne(query: $chatId) {
+                        _id
+                        title
+                        createdAt
+                        members {
+                            login
+                        }
+                        messages {
+                            _id
+                            createdAt
+                            owner {
+                                login
+                                nick
+                            }
+                            text
+                        }
+                        avatar {
+                            url
+                        }
+                    }
+                    }`,
+                { chatId: JSON.stringify([{ _id: _chatId }, { sort: [{ _id: 1 }] }]) }
+            )
+        )
+    );
+    // console.log(ChatFindOne);
+};
+
+const toQuery = (str, fields = ["title"]) => {
+    str = str.replace(/ +/g, " ").trim();
+    str = "/" + str.split(" ").join("|") + "/";
+
+    let arr = fields.map((s) => {
+        return { [s]: str };
+    });
+    return { $or: arr };
+};
+
+const actionSearch = (str = "community") => async (dispatch) => {
+    let searchData = await dispatch(
+        actionPromise(
+            "search",
+            gql(
+                `query search( $query:String){
+                ChatFind(query:$query) {
+                    _id
+                    title
+              }
+            }`,
+                { query: JSON.stringify([toQuery(str)], { sort: [{ _id: 1 }] }) }
+            )
+        )
+    );
+    console.log(searchData);
 };

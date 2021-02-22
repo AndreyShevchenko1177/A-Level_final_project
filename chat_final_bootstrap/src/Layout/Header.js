@@ -5,11 +5,7 @@ import { connect } from "react-redux";
 
 import logo from "../images//logo23.jpg";
 
-const Logo = ({ link = "" }) => (
-    <a href={`/${link}`}>
-        <img src={logo} width="50px" />
-    </a>
-);
+const Logo = ({ link = "" }) => <img src={logo} width="50px" />;
 
 const CLogo = connect((s) => ({ link: s.auth.payloadId }))(Logo);
 

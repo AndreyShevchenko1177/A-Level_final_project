@@ -1,6 +1,21 @@
 .mainWrapper {
-    max-height: 800px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.ChatsList {
+    max-height: 65vh;
     overflow: auto;
+}
+
+.MessagesList {
+    img {
+        width: 50px;
+    }
+    .MessagesList_map {
+        max-height: 70vh;
+        overflow: auto;
+    }
 }
 
 div {

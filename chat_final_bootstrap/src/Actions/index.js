@@ -1,5 +1,13 @@
 import { actionAuthLogin, actionAuthLogout, actionLogin } from "./ActionLogin";
 import { gql } from "./ActionsGql";
-import { actionFindChatsByUserId, actionFindMessagesByChatId } from "./ActionsGql";
+import { actionSearchMessagesByChatId, actionFindMessagesByChatId, actionSearchChat } from "./ActionsGql";
 
-export { actionAuthLogin, actionAuthLogout, actionLogin, gql, actionFindChatsByUserId, actionFindMessagesByChatId };
+export {
+    actionAuthLogin,
+    actionAuthLogout,
+    actionLogin,
+    gql,
+    actionFindMessagesByChatId,
+    actionSearchChat,
+    actionSearchMessagesByChatId,
+};

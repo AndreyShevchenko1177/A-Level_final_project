@@ -7,7 +7,7 @@ const ChatItem = ({ _id = "", avatarUrl, title = "no title", userId }) => (
     <Link to={`/main/${userId}/${_id}`}>
         <div className="ChatItem">
             <img src={avatarUrl ? `${urlConst}/${avatarUrl}}` : logo}></img>
-            <p>{title}</p>
+            <p>Title: {title}</p>
             chatID: {_id}
         </div>
     </Link>
@@ -15,6 +15,18 @@ const ChatItem = ({ _id = "", avatarUrl, title = "no title", userId }) => (
 
 const List = ({ arrayOfChats, userId }) => {
     if (!arrayOfChats) return <></>;
+
+    // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
+    // чаты без сообщений отправляются в конец списка
+    // на сервере сделать такую сортировку не получается
+    arrayOfChats.sort((a, b) => {
+        if (!a.messages) return 1;
+        if (!b.messages) return -1;
+        return +b.messages[b.messages.length - 1].createdAt - +a.messages[a.messages.length - 1].createdAt;
+    });
+
+    // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
+
     return (
         <div>
             {arrayOfChats.map((a) => (
@@ -26,11 +38,10 @@ const List = ({ arrayOfChats, userId }) => {
 
 const CList = connect((s) => ({
     arrayOfChats:
-        s.promise.userFindOne &&
-        s.promise.userFindOne.payload &&
-        s.promise.userFindOne.payload.data &&
-        s.promise.userFindOne.payload.data.UserFindOne &&
-        s.promise.userFindOne.payload.data.UserFindOne.chats,
+        s.promise.searchChat &&
+        s.promise.searchChat.payload &&
+        s.promise.searchChat.payload.data &&
+        s.promise.searchChat.payload.data.ChatFind,
     userId: s.auth && s.auth.payloadId,
 }))(List);
 

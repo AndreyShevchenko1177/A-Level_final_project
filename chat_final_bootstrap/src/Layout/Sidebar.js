@@ -1,11 +1,11 @@
 import { LoginInfo } from "../Layout";
-import { AdditionalTools, ChatsList } from "../Components";
+import { CAdditionalTools, ChatsList } from "../Components";
 
 export const Sidebar = () => (
     <aside className="Sidebar">
         <b>Sidebar</b>
         <LoginInfo />
-        <AdditionalTools />
+        <CAdditionalTools />
         <ChatsList className="ChatsList" />
     </aside>
 );

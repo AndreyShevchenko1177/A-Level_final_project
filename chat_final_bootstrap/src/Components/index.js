@@ -1,7 +1,7 @@
-import { AdditionalTools } from "./AdditionalTools";
+import { CAdditionalTools } from "./AdditionalTools";
 import { ChatsList } from "./ChatsList";
 import { ChatContain } from "./ChatContain";
 import { CButtonLogout } from "./ButtonLogout";
 import { CDashBoardLink } from "./DashBoardLink";
 
-export { AdditionalTools, ChatsList, ChatContain, CButtonLogout, CDashBoardLink };
+export { CAdditionalTools, ChatsList, ChatContain, CButtonLogout, CDashBoardLink };

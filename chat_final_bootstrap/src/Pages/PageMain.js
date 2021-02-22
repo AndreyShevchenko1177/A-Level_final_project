@@ -2,7 +2,7 @@ import { ChatContain } from "../Components";
 import { Sidebar } from "../Layout";
 import { store } from "../Reducers";
 import history from "../history";
-import { actionFindChatsByUserId, actionFindMessagesByChatId } from "../Actions";
+import { actionFindChatsByUserId, actionFindMessagesByChatId, actionSearchChat } from "../Actions";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -15,7 +15,7 @@ const PageMain = ({
     getMesagesList = null,
 }) => {
 
-    console.log("PageMain.js. - True _chatId: ", _chatId);
+    // console.log("PageMain.js. - True _chatId: ", _chatId);
 
     useEffect(() => {
         if (typeof getChatList === "function") {
@@ -61,6 +61,6 @@ const PageMain = ({
 };
 
 export const CPageMain = connect(null, {
-    getChatList: actionFindChatsByUserId,
+    getChatList: actionSearchChat,
     getMesagesList: actionFindMessagesByChatId,
 })(PageMain);

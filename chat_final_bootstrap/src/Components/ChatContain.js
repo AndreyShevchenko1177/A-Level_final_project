@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import { useState, useEffect } from "react";
 import logo from "../images//logo23.jpg";
+import { actionSearchMessagesByChatId } from "../Actions";
 
 import { urlConst } from "../const";
 
@@ -29,58 +31,122 @@ const MessageItem = ({ _id, createdAt = 0, text = "", owner: { login = "", nick 
     );
 };
 
-const MessagesList = ({ arrayOfMessages, avatar, _id = "", title = "" }) => {
-    // id чата, аватар чата
-    if (!arrayOfMessages) return <></>;
+const MessagesList = ({ arrayOfMessages }) => {
     return (
-        <div className="MessagesList">
-            <input placeholder="Serch message"></input>
-            <button>Serch</button>
+        <div className="Messages_map">
+            {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} />)}
+        </div>
+    );
+};
+
+const CMessagesList = connect(
+    (s) => ({
+        arrayOfMessages:
+            s.promise.MessageFind &&
+            s.promise.MessageFind.payload &&
+            s.promise.MessageFind.payload.data &&
+            s.promise.MessageFind.payload.data.MessageFind,
+    }),
+    {}
+)(MessagesList);
+
+const Messages = ({ arrayOfMessages, avatar, _id = "", title = "", doSearchMsg }) => {
+    // id чата, аватар чата
+
+    const [searchMsgStr, setSearchMsgStr] = useState("");
+
+    useEffect(() => {
+        if (typeof doSearchMsg === "function") doSearchMsg(_id, searchMsgStr);
+    }, [searchMsgStr, _id]);
+
+    useEffect(() => {
+        if (typeof doSearchMsg === "function") doSearchMsg(_id, searchMsgStr);
+    }, []);
+
+    return (
+        <div className="Messages">
+            <input placeholder="Serch message" onInput={(e) => setSearchMsgStr(e.target.value)}></input>
+            <span>🔍</span>
             <div>
                 <b>ChatContain</b>
                 {` _chatId: ${_id}`}
                 <img src={avatar && avatar.url ? urlConst + "/" + avatar.url : logo}></img>
                 <span>{`Title: ${title}`}</span>
             </div>
-            <div className="MessagesList_map">
-                {arrayOfMessages.map((mess) => (
-                    <MessageItem key={mess._id} {...mess} {...avatar} />
-                ))}
+            <div>
+                {/* {!searchMsgStr && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} {...avatar} />)} */}
+                <CMessagesList />
             </div>
         </div>
     );
 };
 
-const CMessagesList = connect((s) => ({
-    //id чата
-    _id:
-        s.promise.chatFindOne &&
-        s.promise.chatFindOne.payload &&
-        s.promise.chatFindOne.payload.data &&
-        s.promise.chatFindOne.payload.data.ChatFindOne &&
-        s.promise.chatFindOne.payload.data.ChatFindOne._id,
-    arrayOfMessages:
-        s.promise.chatFindOne &&
-        s.promise.chatFindOne.payload &&
-        s.promise.chatFindOne.payload.data &&
-        s.promise.chatFindOne.payload.data.ChatFindOne &&
-        s.promise.chatFindOne.payload.data.ChatFindOne.messages,
-    avatar:
-        s.promise.chatFindOne &&
-        s.promise.chatFindOne.payload &&
-        s.promise.chatFindOne.payload.data &&
-        s.promise.chatFindOne.payload.data.ChatFindOne &&
-        s.promise.chatFindOne.payload.data.ChatFindOne.avatar,
-    title:
-        s.promise.chatFindOne &&
-        s.promise.chatFindOne.payload &&
-        s.promise.chatFindOne.payload.data &&
-        s.promise.chatFindOne.payload.data.ChatFindOne &&
-        s.promise.chatFindOne.payload.data.ChatFindOne.title,
-}))(MessagesList);
+const CMessages = connect(
+    (s) => ({
+        //id чата
+        _id:
+            s.promise.chatFindOne &&
+            s.promise.chatFindOne.payload &&
+            s.promise.chatFindOne.payload.data &&
+            s.promise.chatFindOne.payload.data.ChatFindOne &&
+            s.promise.chatFindOne.payload.data.ChatFindOne._id,
+        arrayOfMessages:
+            s.promise.chatFindOne &&
+            s.promise.chatFindOne.payload &&
+            s.promise.chatFindOne.payload.data &&
+            s.promise.chatFindOne.payload.data.ChatFindOne &&
+            s.promise.chatFindOne.payload.data.ChatFindOne.messages,
+        avatar:
+            s.promise.chatFindOne &&
+            s.promise.chatFindOne.payload &&
+            s.promise.chatFindOne.payload.data &&
+            s.promise.chatFindOne.payload.data.ChatFindOne &&
+            s.promise.chatFindOne.payload.data.ChatFindOne.avatar,
+        title:
+            s.promise.chatFindOne &&
+            s.promise.chatFindOne.payload &&
+            s.promise.chatFindOne.payload.data &&
+            s.promise.chatFindOne.payload.data.ChatFindOne &&
+            s.promise.chatFindOne.payload.data.ChatFindOne.title,
+    }),
+    { doSearchMsg: actionSearchMessagesByChatId }
+)(Messages);
+
+// const CMessagesList = connect((s) => ({
+//     //id чата
+//     _id:
+//         s.promise.MessageFind &&
+//         s.promise.MessageFind.payload &&
+//         s.promise.MessageFind.payload.data &&
+//         s.promise.MessageFind.payload.data.MessageFind &&
+//         s.promise.MessageFind.payload.data.MessageFind[0] &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
+//     arrayOfMessages:
+//         s.promise.MessageFind &&
+//         s.promise.MessageFind.payload &&
+//         s.promise.MessageFind.payload.data &&
+//         s.promise.MessageFind.payload.data.MessageFind,
+//     avatar:
+//         s.promise.MessageFind &&
+//         s.promise.MessageFind.payload &&
+//         s.promise.MessageFind.payload.data &&
+//         s.promise.MessageFind.payload.data.MessageFind &&
+//         s.promise.MessageFind.payload.data.MessageFind[0] &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat.avatar,
+//     title:
+//         s.promise.MessageFind &&
+//         s.promise.MessageFind.payload &&
+//         s.promise.MessageFind.payload.data &&
+//         s.promise.MessageFind.payload.data.MessageFind &&
+//         s.promise.MessageFind.payload.data.MessageFind[0] &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+//         s.promise.MessageFind.payload.data.MessageFind[0].chat.title,
+// }))(MessagesList);
 
 export const ChatContain = ({ _chatId = "" }) => (
     <div className="ChatContain">
-        <div className="CMessagesList">{!!_chatId && <CMessagesList className="CMessagesList" />}</div>
+        <div>{!!_chatId && <CMessages />}</div>
     </div>
 );

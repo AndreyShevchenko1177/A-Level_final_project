@@ -17,27 +17,52 @@ const getGQL = (url) => (query, variables = {}) => {
 
 export const gql = getGQL(urlConst);
 
-export const actionFindChatsByUserId = (_userId) => async (dispatch) => {
-    let chatList = await dispatch(
+const toQuery = (str, fields = ["title", "text"]) => {
+    str = str.replace(/ +/g, " ").trim();
+    str = "/" + str.split(" ").join("|") + "/";
+
+    let arr = fields.map((s) => {
+        return { [s]: str };
+    });
+    return { $or: arr };
+};
+
+export const actionSearchMessagesByChatId = (_chatId, str) => async (dispatch) => {
+    let searchStr;
+    str = toQuery(str);
+
+    if (_chatId) {
+        searchStr = { $and: [{ "chat._id": _chatId }] };
+        searchStr.$and.push(str);
+    } else searchStr = { str };
+
+    let ChatFindOne = await dispatch(
         actionPromise(
-            "userFindOne",
+            "MessageFind",
             gql(
-                `query UserFindOne($randomId: String) {
-                    UserFindOne(query: $randomId) {
-                        login
+                `query MessageFind($searchMsgStr: String) {
+                    MessageFind(query: $searchMsgStr) {
                         _id
-                        chats {
+                        createdAt
+                        owner {
+                            _id
+                            login
+                            nick
+                        }
+                        text
+                        createdAt
+                        chat {
                             _id
                             title
-                            avatar {url}
+                            avatar{url}
                         }
                     }
                 }`,
-                { randomId: JSON.stringify([{ _id: _userId }, { sort: [{ _id: -1 }] }]) }
+                { searchMsgStr: JSON.stringify([searchStr, { sort: [{ _id: 1 }] }]) }
             )
         )
     );
-    // console.log(chatList);
+    // console.log("actionFindMessagesByChatId result: ", ChatFindOne);
 };
 
 export const actionFindMessagesByChatId = (_chatId) => async (dispatch) => {
@@ -74,30 +99,31 @@ export const actionFindMessagesByChatId = (_chatId) => async (dispatch) => {
     // console.log(ChatFindOne);
 };
 
-const toQuery = (str, fields = ["title"]) => {
-    str = str.replace(/ +/g, " ").trim();
-    str = "/" + str.split(" ").join("|") + "/";
+export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => {
+    let searchStr;
+    str = toQuery(str);
 
-    let arr = fields.map((s) => {
-        return { [s]: str };
-    });
-    return { $or: arr };
-};
+    if (_userId) {
+        searchStr = { $and: [{ ___owner: _userId }] };
+        searchStr.$and.push(str);
+    } else searchStr = { str };
+    // console.log("actionSearchChat-searchStr: ", searchStr);
 
-const actionSearch = (str = "community") => async (dispatch) => {
     let searchData = await dispatch(
         actionPromise(
-            "search",
+            "searchChat",
             gql(
                 `query search( $query:String){
                 ChatFind(query:$query) {
                     _id
                     title
+                    avatar {url}
+                    messages {_id createdAt}
               }
             }`,
-                { query: JSON.stringify([toQuery(str)], { sort: [{ _id: 1 }] }) }
+                { query: JSON.stringify([searchStr]) }
             )
         )
     );
-    console.log(searchData);
+    // console.log("actionSearchChat - searchData:", searchData);
 };

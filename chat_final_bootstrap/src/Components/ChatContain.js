@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import logo from "../images//logo23.jpg";
 import { actionSearchMessagesByChatId } from "../Actions";
+import ScrollableFeed from "react-scrollable-feed";
 
 import { urlConst } from "../const";
 
@@ -32,12 +33,29 @@ const MessageItem = ({ _id, createdAt = 0, text = "", owner: { login = "", nick 
 };
 
 const MessagesList = ({ arrayOfMessages }) => {
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = () => messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+
+    useEffect(scrollToBottom, [arrayOfMessages]);
+
     return (
         <div className="Messages_map">
             {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} />)}
+            <div ref={messagesEndRef} />
         </div>
     );
 };
+
+// const MessagesList = ({ arrayOfMessages }) => {
+//     return (
+//         <div className="Messages_map">
+//             <ScrollableFeed>
+//                 {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} />)}
+//             </ScrollableFeed>
+//         </div>
+//     );
+// };
 
 const CMessagesList = connect(
     (s) => ({
@@ -74,7 +92,6 @@ const Messages = ({ arrayOfMessages, avatar, _id = "", title = "", doSearchMsg }
                 <span>{`Title: ${title}`}</span>
             </div>
             <div>
-                {/* {!searchMsgStr && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} {...avatar} />)} */}
                 <CMessagesList />
             </div>
         </div>

@@ -36,7 +36,7 @@ const List = ({ arrayOfChats, userId }) => {
         return +b - +a;
     });
 
-    console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
+    // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
 
     return (
         <div>

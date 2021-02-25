@@ -75,7 +75,7 @@ export const actionPromise = (name, promise) => {
 };
 
 export const store = createStore(
-    combineReducers({ promise: promiseReducer, auth: authReducer }),
+    combineReducers({ auth: authReducer, promise: promiseReducer }),
     applyMiddleware(thunk)
 );
 

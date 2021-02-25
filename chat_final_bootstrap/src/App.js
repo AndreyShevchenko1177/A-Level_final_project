@@ -13,7 +13,7 @@ import {
 import history from "./history";
 import { Provider, connect } from "react-redux";
 import { Header, Footer } from "./Layout";
-import { CPageMain, PageLogin, PageNewChat } from "./Pages";
+import { CPageMain, PageLogin, PageNewChat, PageUpload } from "./Pages";
 import { actionFindChatsByUserId } from "./Actions";
 
 import { store } from "./Reducers";
@@ -38,6 +38,7 @@ const App = () => (
                     <Switch>
                         <Redirect from="/aboutus" to="/main" exact />
                         <Route path="/newchat" component={PageNewChat} exact />
+                        <Route path="/upload" component={PageUpload} exact />
                         <Route path="/" component={PageLogin} exact />
                         <Route path="/main/:_userId/:_chatId" component={CPageMain} exact />
                         <Route path="/main/:_userId" component={CPageMain} exact />

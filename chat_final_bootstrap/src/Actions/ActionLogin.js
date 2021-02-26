@@ -30,7 +30,7 @@ export const actionLogin = (login, password) => async (dispatch) => {
     }
 };
 
-export const actionRagistration = (login, password) => async (dispatch) => {
+export const actionRegistration = (login, password) => async (dispatch) => {
     let loginData = await dispatch(
         actionPromise(
             "login",

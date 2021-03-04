@@ -3,6 +3,7 @@ import history from "../history";
 import { useState, useEffect } from "react";
 import { actionSearchChat } from "../Actions";
 import { connect } from "react-redux";
+import { Button } from "react-bootstrap";
 
 export const AdditionalTools = ({ _userId, onSearch = null }) => {
     const [searchStr, setSearchStr] = useState("");
@@ -18,22 +19,27 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
     }, [searchStr]);
 
     return (
-        <div className="AdditionalTools">
+        <div className="bg-light mb-2">
             <input
+                className="form-control mb-2 p-2 border border-success border-2"
                 placeholder="Serch by title in my chats"
                 onInput={(e) => {
                     setSearchStr(e.target.value);
                 }}
             ></input>
-            <span>🔍</span>
-            <button
+            {/* <span>🔍</span> */}
+            <Button
+                className="gradient"
+                variant="secondary btn-sm"
                 onClick={() => {
                     history.push("/newchat");
                 }}
             >
                 New Chat
-            </button>
-            <button>Join to another chat</button>
+            </Button>
+            <Button className="gradient" variant="secondary btn-sm">
+                Join to another chat
+            </Button>
         </div>
     );
 };

@@ -62,7 +62,6 @@ const CList = connect((s) => ({
 
 export const ChatsList = () => (
     <div className="ChatsList">
-        <b>ChatsList</b> <br />
         <CList />
     </div>
 );

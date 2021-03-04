@@ -34,24 +34,17 @@ div {
 }
 
 .LoginForm {
-    background-color: lightgreen;
-}
-
-.LoginInfo {
-    background-color: lemonchiffon;
-    img {
-        width: 80px;
-    }
+    // background-color: lightgreen;
 }
 
 .PageMain {
-    background-color: lightskyblue;
+    // background-color: lightskyblue;
     div {
-        .Sidebar {
-            background-color: lightgreen;
-        }
+        // .Sidebar {
+        //     background-color: lightgreen;
+        // }
         .ChatContain {
-            background-color: lightpink;
+            // background-color: lightpink;
         }
     }
 }
@@ -62,5 +55,21 @@ div {
     }
     p {
         font-weight: 700;
+    }
+}
+
+.gradient {
+    background-image: var(--bs-gradient);
+}
+
+.noUnderLine {
+    text-decoration: none;
+}
+
+.userInfo {
+    // background-color: darkseagreen;
+    img {
+        width: 48px;
+        border-radius: 50%;
     }
 }

@@ -1,13 +1,12 @@
 import { actionAuthLogout } from "../Actions";
 import { connect } from "react-redux";
+import { Button } from "react-bootstrap";
 
 const ButtonLogout = ({ onLogout, isLoggedIn }) => (
-    <button onClick={onLogout} disabled={!isLoggedIn}>
+    <Button className="gradient" variant="secondary btn-sm" onClick={onLogout} disabled={!isLoggedIn}>
         Logout
-    </button>
+    </Button>
 );
 export const CButtonLogout = connect((s) => ({ isLoggedIn: s.auth.login }), { onLogout: actionAuthLogout })(
     ButtonLogout
 );
-
-// export const CCButtonLogout = () => <CButtonLogout />;

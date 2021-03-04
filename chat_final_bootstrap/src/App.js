@@ -13,7 +13,7 @@ import {
 import history from "./history";
 import { Provider, connect } from "react-redux";
 import { Header, Footer } from "./Layout";
-import { CPageMain, PageLogin, PageNewChat, PageUpload } from "./Pages";
+import { CPageMain, PageLogin, PageNewChat, PageUpload, PageAbout } from "./Pages";
 import { actionFindChatsByUserId } from "./Actions";
 
 import { store } from "./Reducers";
@@ -32,22 +32,20 @@ const PageNotFound = () => {
 const App = () => (
     <Provider store={store}>
         <Router history={history}>
-            <div className="mainWrapper">
-                <Header />
-                <div>
-                    <Switch>
-                        <Redirect from="/aboutus" to="/main" exact />
-                        <Route path="/newchat" component={PageNewChat} exact />
-                        <Route path="/upload" component={PageUpload} exact />
-                        <Route path="/" component={PageLogin} exact />
-                        <Route path="/main/:_userId/:_chatId" component={CPageMain} exact />
-                        <Route path="/main/:_userId" component={CPageMain} exact />
+            <Header />
 
-                        <Route component={PageNotFound} exact />
-                    </Switch>
-                </div>
-                <Footer />
-            </div>
+            <Switch>
+                <Route path="/about" component={PageAbout} exact />
+                <Route path="/newchat" component={PageNewChat} exact />
+                <Route path="/upload" component={PageUpload} exact />
+                <Route path="/" component={PageLogin} exact />
+                <Route path="/main/:_userId/:_chatId" component={CPageMain} exact />
+                <Route path="/main/:_userId" component={CPageMain} exact />
+
+                <Route component={PageNotFound} exact />
+            </Switch>
+
+            <Footer />
         </Router>
     </Provider>
 );

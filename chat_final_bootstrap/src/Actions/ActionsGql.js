@@ -65,7 +65,8 @@ export const actionSearchMessagesByChatId = (_chatId, str) => async (dispatch) =
     // console.log("actionFindMessagesByChatId result: ", ChatFindOne);
 };
 
-export const actionFindMessagesByChatId = (_chatId) => async (dispatch) => {
+// получить все сообщения из чата с такм-то _id
+export const actionGetMessagesByChatId = (_chatId) => async (dispatch) => {
     let ChatFindOne = await dispatch(
         actionPromise(
             "chatFindOne",

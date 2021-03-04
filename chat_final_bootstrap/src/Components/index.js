@@ -3,6 +3,6 @@ import { ChatsList } from "./ChatsList";
 import { ChatContain } from "./ChatContain";
 import { CButtonLogout } from "./ButtonLogout";
 import { CButtonUpload } from "./ButtonUpload";
-import { CDashBoardLink } from "./DashBoardLink";
+import { CLoginInfo } from "./LoginInfo";
 
-export { CAdditionalTools, ChatsList, ChatContain, CButtonLogout, CDashBoardLink, CButtonUpload };
+export { CAdditionalTools, ChatsList, ChatContain, CButtonLogout, CLoginInfo, CButtonUpload };

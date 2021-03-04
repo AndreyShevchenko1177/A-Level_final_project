@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { CButtonLogout, CButtonUpload } from "../Components";
-import { CDashBoardLink } from "../Components";
+import { CLoginInfo } from "../Components";
 import { connect } from "react-redux";
+import { PersonFillIcon } from "../images/icons";
 
 import logo from "../images//logo23.jpg";
 
@@ -14,8 +15,9 @@ export const Header = () => (
         <Link to={`/`}>
             <CLogo />
         </Link>
-        <CDashBoardLink />
+        <CLoginInfo />
         <CButtonLogout />
         <CButtonUpload />
+        {/* <PersonFillIcon /> */}
     </div>
 );

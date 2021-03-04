@@ -20,16 +20,14 @@ export const PageUpload = () => {
                     method: "POST",
                     headers: localStorage.authToken ? { Authorization: "Bearer " + localStorage.authToken } : {},
                     body: dataSingl,
-                })
-                    .then((res) => res.json())
-                    .catch((e) => alert("Произошла ошибка."));
+                }).then((res) => res.json());
             });
 
             resultArray.current = [];
 
-            await Promise.all(aaryOfFatchs).then((responses) =>
-                responses.forEach((response) => resultArray.current.push(response))
-            );
+            await Promise.all(aaryOfFatchs)
+                .then((responses) => responses.forEach((response) => resultArray.current.push(response)))
+                .catch((e) => alert("Произошла ошибка.", e));
 
             console.log(resultArray.current);
 

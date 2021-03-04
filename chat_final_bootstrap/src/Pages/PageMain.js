@@ -2,18 +2,12 @@ import { ChatContain } from "../Components";
 import { Sidebar } from "../Layout";
 import { store } from "../Reducers";
 import history from "../history";
-import { actionFindChatsByUserId, actionFindMessagesByChatId, actionSearchChat } from "../Actions";
+import { actionGetMessagesByChatId, actionSearchChat } from "../Actions";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 
 //prettier-ignore
-const PageMain = ({
-    match: {
-        params: { _userId, _chatId },
-    },
-    getChatList = null,
-    getMesagesList = null,
-}) => {
+const PageMain = ({match: {params: { _userId, _chatId },}, getChatList = null, getMesagesList = null }) => {
 
     // console.log("PageMain.js. - True _chatId: ", _chatId);
 
@@ -60,7 +54,5 @@ const PageMain = ({
     );
 };
 
-export const CPageMain = connect(null, {
-    getChatList: actionSearchChat,
-    getMesagesList: actionFindMessagesByChatId,
-})(PageMain);
+// prettier-ignore
+export const CPageMain = connect(null, { getChatList: actionSearchChat, getMesagesList: actionGetMessagesByChatId })(PageMain);

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { connect } from "react-redux";
-import { actionLogin } from "../Actions";
+import { actionLogin, actionRegistration } from "../Actions";
 import history from "../history";
 import { store } from "../Reducers";
 
@@ -66,7 +66,7 @@ const LoginForm = ({ onLogin = null, isLoggedIn, mode = "Login" }) => {
 
 const CLoginForm = connect((s) => ({ isLoggedIn: s.auth.login, mode: "Login" }), { onLogin: actionLogin })(LoginForm);
 // prettier-ignore
-const CRegForm = connect((s) => ({ isLoggedIn: s.auth.login, mode: "Registration" }), { onLogin: null })(LoginForm);
+const CRegForm = connect((s) => ({ isLoggedIn: s.auth.login, mode: "Registration" }), { onLogin: actionRegistration })(LoginForm);
 
 export const PageLogin = () => (
     <div className="PageLogin">

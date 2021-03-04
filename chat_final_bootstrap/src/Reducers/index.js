@@ -3,6 +3,7 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import jwt_decode from "jwt-decode";
 import history from "../history";
+import { actionUserInfo } from "../Actions";
 
 function authReducer(state, action) {
     if (state === undefined) {
@@ -25,6 +26,7 @@ function authReducer(state, action) {
                 payloadId: jwt_decode(action.jwt).sub.id,
             };
         } catch (error) {
+            console.log(error);
             localStorage.removeItem("authToken");
             return {};
         }
@@ -35,6 +37,16 @@ function authReducer(state, action) {
         localStorage.removeItem("authToken");
         return {};
     }
+
+    if (action.type === "INFO") {
+        console.log("INFO", action.userInfo);
+        return {
+            ...state,
+            nick: action.userInfo.nick,
+            avatarUrl: action.userInfo.url,
+        };
+    }
+
     return state;
 }
 

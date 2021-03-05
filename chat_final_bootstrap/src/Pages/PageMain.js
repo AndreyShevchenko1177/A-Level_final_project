@@ -43,8 +43,8 @@ const PageMain = ({match: {params: { _userId, _chatId },}, getChatList = null, g
         <div className="PageMain container-fluid">
             <div className="row">
                 <div className="col-md-4">
-                    {_userId+` - подмена id`}
-                    <Sidebar />
+                    {_userId + ` - подмена id`}
+                    <Sidebar  />
                 </div>
                 <div className="col-md-8">
                     <ChatContain _chatId={_chatId} />

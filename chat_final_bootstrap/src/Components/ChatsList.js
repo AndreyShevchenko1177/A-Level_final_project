@@ -2,20 +2,43 @@ import logo from "../images//logo23.jpg";
 import { connect } from "react-redux";
 import { urlConst } from "../const";
 import { Link } from "react-router-dom";
+import personFillIcon from "../icons/person-fill.svg";
+import history from "../history";
 
-const ChatItem = ({ _id = "", avatar, title = "no title", messages, userId }) => (
-    <Link to={`/main/${userId}/${_id}`}>
-        <div className="ChatItem">
-            <img src={avatar && avatar.url ? `${urlConst}/${avatar.url}}` : logo}></img>
-            <p>Title: {title}</p>
-            <span>Count of msg: {messages && messages.length ? messages.length : 0}</span>
-            <br />
-            <span> chatID: {_id}</span>
-        </div>
+const ChatItem = ({ _id = "", avatar, title = "no title", messages, userId, chatId }) => (
+    // здесь _id - чата
+    <Link to={`/main/${userId}/${_id}`} className="noUnderLine">
+        <>
+            <li
+                className={
+                    _id === chatId
+                        ? "list-group-item list-group-item-success my-1 gradient"
+                        : "list-group-item list-group-item-light my-1 gradient"
+                }
+            >
+                <div>
+                    {avatar && avatar.url ? (
+                        <img src={`${urlConst}/${avatar.url}`}></img>
+                    ) : (
+                        <div className="bg-success border border-2 border-success">
+                            <i class="fs-3 text-light bi bi-chat-dots "></i>
+                        </div>
+                    )}
+                </div>
+                <div className="text-success ">
+                    <span>Title: {title}</span>
+                    <br />
+                    <span>Count of msg: {messages && messages.length ? messages.length : 0}</span>
+                </div>
+
+                <br />
+                <span> chatID: {_id}</span>
+            </li>
+        </>
     </Link>
 );
 
-const List = ({ arrayOfChats, userId }) => {
+const List = ({ arrayOfChats, userId, chatId }) => {
     if (!arrayOfChats) return <></>;
 
     // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
@@ -43,15 +66,21 @@ const List = ({ arrayOfChats, userId }) => {
     // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
 
     return (
-        <div>
+        <ul class="list-group" role="tablist">
             {arrayOfChats.map((a) => (
-                <ChatItem key={a._id} {...a} userId={userId} />
+                <ChatItem key={a._id} {...a} userId={userId} chatId={chatId} />
             ))}
-        </div>
+        </ul>
     );
 };
 
 const CList = connect((s) => ({
+    chatId:
+        s.promise.chatFindOne &&
+        s.promise.chatFindOne.payload &&
+        s.promise.chatFindOne.payload.data &&
+        s.promise.chatFindOne.payload.data.ChatFindOne &&
+        s.promise.chatFindOne.payload.data.ChatFindOne._id,
     arrayOfChats:
         s.promise.searchChat &&
         s.promise.searchChat.payload &&

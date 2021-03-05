@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { urlUploadConst } from "../const";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import { ButtonToMain } from "../Components";
 
 export const PageUpload = () => {
     const [fl, setFl] = useState(false);
@@ -51,8 +52,8 @@ export const PageUpload = () => {
     return (
         <>
             <div>
-                PageUpload <br />
-                <br />
+                PageUpload
+                <ButtonToMain />
             </div>
             <br />
             <MyDropzone />

@@ -83,7 +83,11 @@ const Messages = ({ arrayOfMessages, avatar, _id = "", title = "", doSearchMsg }
 
     return (
         <div className="Messages">
-            <input placeholder="Serch message" onInput={(e) => setSearchMsgStr(e.target.value)}></input>
+            <input
+                placeholder="Serch message"
+                onInput={(e) => setSearchMsgStr(e.target.value)}
+                className="form-control mb-2 p-2 border border-success border-2"
+            ></input>
             <span>🔍</span>
             <div>
                 <b>ChatContain</b>

@@ -37,7 +37,7 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
             >
                 New Chat
             </Button>
-            <Button className="gradient" variant="secondary btn-sm">
+            <Button className="gradient" variant="secondary btn-sm  ms-2">
                 Join to another chat
             </Button>
         </div>

@@ -4,10 +4,18 @@ import { useState, useEffect, useRef } from "react";
 import logo from "../images//logo23.jpg";
 import { actionSearchMessagesByChatId } from "../Actions";
 import ScrollableFeed from "react-scrollable-feed";
-
 import { urlConst } from "../const";
 
-const MessageItem = ({ _id, createdAt = 0, text = "", owner: { login = "", nick = "" } }) => {
+const MessageItem = ({
+    _id,
+    createdAt = 0,
+    text = "",
+    owner: { _id: ownerId, login = "", nick = "", avatar },
+    myId,
+}) => {
+    // первый _id - messageId
+
+    if (!nick) nick = login;
     let date = new Date(+createdAt);
     let dateStr =
         date.getFullYear().toString().padStart(4, 0) +
@@ -21,32 +29,65 @@ const MessageItem = ({ _id, createdAt = 0, text = "", owner: { login = "", nick 
         date.getMinutes().toString().padStart(2, 0);
     // ":" +
     // date.getSeconds().toString().padStart(2, 0);
+
     return (
-        <div>
+        // <div className="list-group-item list-group-item-success m-2 gradient shadow-sm border-2">
+        <div
+            className={`messageItem list-group-item m-2 gradient shadow-sm border-2 ${
+                myId === ownerId
+                    ? "start-right list-group-item-success text-success"
+                    : " list-group-item-light text-red"
+            }`}
+        >
+            {/*  */}
+            {avatar && avatar.url ? (
+                <img src={`${urlConst}/${avatar.url}`}></img>
+            ) : (
+                <div className="bg-success border border-2 border-success gradient">
+                    {/* <i class="fs-3 text-light bi bi-chat-dots "></i> */}
+                    <p className="fs-5 text-light fw-bolder">
+                        {`${title.split(" ")[0][0].toUpperCase()}` +
+                            `${
+                                (title.split(" ").slice(1).pop() && title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                ""
+                            }`}
+                    </p>
+                </div>
+            )}
+
+            {/*  */}
+            {/* <span>{`myid: ${myId}`}</span> */}
             <span>{`message id: ${_id}`}</span>
             <br />
-            <p>{`Login: ${login}, Nick: ${nick}`}</p>
+            <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p>
             <h5>{text}</h5>
             <div>{dateStr}</div>
         </div>
     );
 };
 
-const MessagesList = ({ arrayOfMessages }) => {
+const MessagesList = ({ arrayOfMessages, myId }) => {
     const messagesEndRef = useRef(null);
 
+    //FIXME: подмена myId
+    if (myId) myId = "5e97105693e2915e617c6fc1";
+
+    // скролл в самый низ при приходе новых сообщений
     const scrollToBottom = () => messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
 
     useEffect(scrollToBottom, [arrayOfMessages]);
 
     return (
         <div className="Messages_map">
-            {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} />)}
+            {/* //FIXME: */}
+            {/* {myId} */}
+            {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} myId={myId} />)}
             <div ref={messagesEndRef} />
         </div>
     );
 };
 
+// скролл вниз при новых сообщениях только если мы ща уже внизу
 // const MessagesList = ({ arrayOfMessages }) => {
 //     return (
 //         <div className="Messages_map">
@@ -64,11 +105,12 @@ const CMessagesList = connect(
             s.promise.MessageFind.payload &&
             s.promise.MessageFind.payload.data &&
             s.promise.MessageFind.payload.data.MessageFind,
+        myId: s.auth && s.auth.payloadId,
     }),
     {}
 )(MessagesList);
 
-const Messages = ({ arrayOfMessages, avatar, _id = "", title = "", doSearchMsg }) => {
+const Messages = ({ arrayOfMessages, avatar, _id = "", title = "No Title", doSearchMsg }) => {
     // id чата, аватар чата
 
     const [searchMsgStr, setSearchMsgStr] = useState("");
@@ -84,16 +126,33 @@ const Messages = ({ arrayOfMessages, avatar, _id = "", title = "", doSearchMsg }
     return (
         <div className="Messages">
             <input
-                placeholder="Serch message"
+                placeholder="Search message"
                 onInput={(e) => setSearchMsgStr(e.target.value)}
                 className="form-control mb-2 p-2 border border-success border-2"
             ></input>
-            <span>🔍</span>
-            <div>
-                <b>ChatContain</b>
+            {/* <span>🔍</span> */}
+            <div className=" messagesTitle mb-3 border border-3 border-success p-2">
+                {/* <img src={avatar && avatar.url ? urlConst + "/" + avatar.url : logo}></img> */}
+
+                {avatar && avatar.url ? (
+                    <img src={`${urlConst}/${avatar.url}`}></img>
+                ) : (
+                    <div className="bg-success border border-2 border-success gradient">
+                        {/* <i class="fs-3 text-light bi bi-chat-dots "></i> */}
+                        <p className="fs-5 text-light fw-bolder">
+                            {title &&
+                                `${title.split(" ")[0][0].toUpperCase()}` +
+                                    `${
+                                        (title.split(" ").slice(1).pop() &&
+                                            title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                        ""
+                                    }`}
+                        </p>
+                    </div>
+                )}
+
+                <span className="ms-2 fs-4 fw-bolder">{`Title: ${title}`}</span>
                 {` _chatId: ${_id}`}
-                <img src={avatar && avatar.url ? urlConst + "/" + avatar.url : logo}></img>
-                <span>{`Title: ${title}`}</span>
             </div>
             <div>
                 <CMessagesList />

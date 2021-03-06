@@ -9,14 +9,14 @@ const LoginInfo = ({ login, nick, _id, getUserInfo }) => {
     }, [_id]);
 
     return (
-        <span className="mx-2 text-white">
+        <span className="mx-2 text-white ">
             {login ? (
-                <span>
-                    {`Login: ${login}`}
+                <span className="text-nowrap">
+                    <span className="text-nowrap"> {`Login: ${login}`} </span>
                     {" / "}
-                    {`Nick: ${nick}`}
+                    <span className="text-nowrap">{`Nick: ${nick}`}</span>
                     <br />
-                    {`_id: ${_id}`}
+                    <span className="text-nowrap">{`_id: ${_id}`}</span>
                 </span>
             ) : (
                 <Link to="/">"You should log in"</Link>

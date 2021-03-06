@@ -48,6 +48,7 @@ export const actionSearchMessagesByChatId = (_chatId, str) => async (dispatch) =
                             _id
                             login
                             nick
+                            avatar{url}
                         }
                         text
                         createdAt

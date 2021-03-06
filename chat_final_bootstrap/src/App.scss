@@ -1,5 +1,37 @@
+//
+
+$position-values: (
+    right: 17%,
+    20: 20%,
+);
+
+div {
+    border-radius: 7px;
+    // border: 1px solid red;
+}
+
+::-webkit-scrollbar {
+    width: 7px; /* width of the entire scrollbar */
+    background-color: #d1e7dd;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: 5px 5px 5px -5px rgba(11, 61, 6, 0.2) inset;
+    -webkit-box-shadow: 5px 5px 5px -5px rgba(11, 61, 6, 0.2) inset;
+    background-color: #d1e7dd;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    // background: linear-gradient(#d1e7dd, #198754, #198754, #198754, #d1e7dd);
+    background: linear-gradient(#d1e7dd, #198754 20%, #198754 80%, #d1e7dd);
+}
+
 body {
     overflow: hidden;
+}
+.header {
+    min-width: 360px;
 }
 
 .ChatsList {
@@ -13,7 +45,8 @@ body {
         border-radius: 50%;
         overflow: hidden;
         float: left;
-        i {
+        i,
+        p {
             color: honeydew;
             margin: 0;
             position: absolute;
@@ -52,9 +85,30 @@ body {
     }
 }
 
-div {
-    border-radius: 7px;
-    // border: 1px solid red;
+.messagesTitle {
+    min-height: 70px;
+    div:first-child {
+        position: relative;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        overflow: hidden;
+        float: left;
+        i,
+        p {
+            color: honeydew;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-52%, -55%);
+        }
+    }
+}
+
+.messageItem {
+    width: 80%;
 }
 
 .LoginForm {
@@ -85,3 +139,5 @@ div {
         border-radius: 50%;
     }
 }
+
+@import "/node_modules/bootstrap/scss/bootstrap";

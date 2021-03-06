@@ -12,7 +12,8 @@ const CLogo = connect((s) => ({ link: s.auth.payloadId }))(Logo);
 
 export const Header = () => (
     <>
-        <Navbar className="gradient" collapseOnSelect expand="sm" bg="dark" variant="dark">
+        {/* <Navbar className="gradient" collapseOnSelect expand="sm" bg="dark" variant="dark"> */}
+        <Navbar className="gradient header" collapseOnSelect bg="dark" variant="dark">
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">
                 <Nav>

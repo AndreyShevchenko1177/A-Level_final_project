@@ -5,40 +5,47 @@ import { Link } from "react-router-dom";
 import personFillIcon from "../icons/person-fill.svg";
 import history from "../history";
 
-const ChatItem = ({ _id = "", avatar, title = "no title", messages, userId, chatId }) => (
-    // здесь _id - чата
+const ChatItem = ({ _id = "", avatar, title = "no title", messages, userId, currentChatId }) => (
+    // здесь _id - чата, currentChatId - текущий выбраный чат
     <Link to={`/main/${userId}/${_id}`} className="noUnderLine">
         <>
             <li
                 className={
-                    _id === chatId
-                        ? "list-group-item list-group-item-success my-1 gradient"
-                        : "list-group-item list-group-item-light my-1 gradient"
+                    _id === currentChatId
+                        ? "list-group-item list-group-item-success m-1 gradient shadow border-2"
+                        : "list-group-item list-group-item-light m-1 gradient shadow-sm border-2"
                 }
             >
                 <div>
                     {avatar && avatar.url ? (
                         <img src={`${urlConst}/${avatar.url}`}></img>
                     ) : (
-                        <div className="bg-success border border-2 border-success">
-                            <i class="fs-3 text-light bi bi-chat-dots "></i>
+                        <div className="bg-success border border-2 border-success gradient">
+                            {/* <i class="fs-3 text-light bi bi-chat-dots "></i> */}
+                            <p className="fs-5 text-light fw-bolder">
+                                {`${title.split(" ")[0][0].toUpperCase()}` +
+                                    `${
+                                        (title.split(" ").slice(1).pop() &&
+                                            title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                        ""
+                                    }`}
+                            </p>
                         </div>
                     )}
                 </div>
-                <div className="text-success ">
+                <div className="text-success text-nowrap">
                     <span>Title: {title}</span>
                     <br />
                     <span>Count of msg: {messages && messages.length ? messages.length : 0}</span>
                 </div>
 
-                <br />
-                <span> chatID: {_id}</span>
+                {/* <span className="text-nowrap"> chatID: {_id}</span> */}
             </li>
         </>
     </Link>
 );
 
-const List = ({ arrayOfChats, userId, chatId }) => {
+const List = ({ arrayOfChats, userId, currentChatId }) => {
     if (!arrayOfChats) return <></>;
 
     // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
@@ -68,14 +75,14 @@ const List = ({ arrayOfChats, userId, chatId }) => {
     return (
         <ul class="list-group" role="tablist">
             {arrayOfChats.map((a) => (
-                <ChatItem key={a._id} {...a} userId={userId} chatId={chatId} />
+                <ChatItem key={a._id} {...a} userId={userId} currentChatId={currentChatId} />
             ))}
         </ul>
     );
 };
 
 const CList = connect((s) => ({
-    chatId:
+    currentChatId:
         s.promise.chatFindOne &&
         s.promise.chatFindOne.payload &&
         s.promise.chatFindOne.payload.data &&

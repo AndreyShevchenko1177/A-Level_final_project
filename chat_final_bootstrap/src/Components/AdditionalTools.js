@@ -19,10 +19,10 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
     }, [searchStr]);
 
     return (
-        <div className="bg-light mb-2">
+        <div className="bg-light mb-2 text-nowrap">
             <input
                 className="form-control mb-2 p-2 border border-success border-2"
-                placeholder="Serch by title in my chats"
+                placeholder="Search by title in my chats"
                 onInput={(e) => {
                     setSearchStr(e.target.value);
                 }}

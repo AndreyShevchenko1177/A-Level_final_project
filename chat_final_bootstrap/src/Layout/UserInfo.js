@@ -3,8 +3,9 @@ import personFillIcon from "../icons/person-fill.svg";
 import { CButtonLogout, CLoginInfo } from "../Components";
 import { Link } from "react-router-dom";
 import { urlUploadConst } from "../const";
+import { connect } from "react-redux";
 
-export const UserInfo = ({ avatarUrl }) => (
+const UserInfo = ({ avatarUrl }) => (
     <div className="userInfo bg-gradient bg-success text-white p-1 py-2 mb-2 text-white">
         <Link to="/dashboard" className="userInfo noUnderLine">
             <span className="m-2  text-nowrap">
@@ -18,3 +19,5 @@ export const UserInfo = ({ avatarUrl }) => (
         </Link>
     </div>
 );
+
+export const CUserInfo = connect((s) => ({ avatarUrl: s.auth && s.auth.avatarUrl }))(UserInfo);

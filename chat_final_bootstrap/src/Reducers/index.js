@@ -23,7 +23,9 @@ function authReducer(state, action) {
                 login: true,
                 token: action.jwt,
                 payload: jwt_decode(action.jwt).sub.login,
-                payloadId: jwt_decode(action.jwt).sub.id,
+                // payloadId: jwt_decode(action.jwt).sub.id,
+                //FIXME: отладочный _userId
+                payloadId: "5e97105693e2915e617c6fc1",
             };
         } catch (error) {
             console.log(error);
@@ -39,11 +41,14 @@ function authReducer(state, action) {
     }
 
     if (action.type === "INFO") {
-        console.log("INFO", action.userInfo);
+        // console.log("INFO **************** ", action.userInfo);
         return {
             ...state,
+            payload: action.userInfo.login,
+            payloadId: action.userInfo._id,
             nick: action.userInfo.nick,
             avatarUrl: action.userInfo.url,
+            chats: action.userInfo.chats,
         };
     }
 
@@ -64,6 +69,13 @@ function promiseReducer(state = {}, action) {
                 },
             };
         }
+    }
+    return state;
+}
+
+function messagesReduser(state = {}, action) {
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
+    if (action.type === "ADDMSG") {
     }
     return state;
 }

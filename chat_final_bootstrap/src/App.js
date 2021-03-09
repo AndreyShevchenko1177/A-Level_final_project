@@ -14,14 +14,14 @@ import {
 import history from "./history";
 import { Provider, connect } from "react-redux";
 import { Header, Footer } from "./Layout";
-import { CPageMain, PageLogin, PageNewChat, PageUpload, PageAbout } from "./Pages";
+import { CPageMain, PageLogin, PageNewChat, PageUpload, PageAbout, CPageSearch } from "./Pages";
 import { actionFindChatsByUserId } from "./Actions";
 
 import { store } from "./Reducers";
 
 const PageNotFound = () => {
     setTimeout(() => {
-        history.push("/");
+        history.push("/main");
     }, 3000);
     return (
         <div>
@@ -40,13 +40,14 @@ const App = () => (
                 <Route path="/newchat" component={PageNewChat} exact />
                 <Route path="/upload" component={PageUpload} exact />
                 <Route path="/" component={PageLogin} exact />
-                <Route path="/main/:_userId/:_chatId" component={CPageMain} exact />
-                <Route path="/main/:_userId" component={CPageMain} exact />
+                <Route path="/main/:_chatId" component={CPageMain} exact />
+                <Route path="/main/" component={CPageMain} exact />
+                <Route path="/search/" component={CPageSearch} exact />
 
                 <Route component={PageNotFound} exact />
             </Switch>
 
-            <Footer />
+            {/* <Footer /> */}
         </Router>
     </Provider>
 );

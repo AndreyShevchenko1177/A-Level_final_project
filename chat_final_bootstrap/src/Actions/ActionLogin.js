@@ -11,12 +11,13 @@ export const actionAuthLogout = () => {
     return { type: "LOGOUT" };
 };
 
-export const actionAuthInfo = ({ login, nick, _id, avtar: { url } = { url: null } }) => {
+export const actionAuthInfo = ({ login, nick, _id, avatar: { url } = { url: null }, chats = [] }) => {
     // console.log("actionAuthInfo - ", login, nick, _id, url);
-    return { type: "INFO", userInfo: { login, nick, _id, url } };
+    return { type: "INFO", userInfo: { login, nick, _id, url, chats } };
 };
 
 export const actionUserInfo = (userId) => async (dispatch) => {
+    // console.log("actionUserInfo - ########### ", userId);
     let userData = await dispatch(
         actionPromise(
             "UserFindOne",
@@ -26,7 +27,12 @@ export const actionUserInfo = (userId) => async (dispatch) => {
                             login
                             nick
                             _id
-                            avatar { url }
+                            avatar {url}
+                            chats {
+                                _id
+                                title
+                                avatar {url}
+                                }
                         }
                     }`,
                 { userId: JSON.stringify([{ _id: userId }]) }
@@ -34,7 +40,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
         )
     );
 
-    // console.log("UserFindOne", userData);
+    // console.log("UserFindOne - ##########", userData.data.UserFindOne);
 
     if (userData && userData.data.UserFindOne) {
         dispatch(actionAuthInfo(userData.data.UserFindOne));
@@ -62,7 +68,7 @@ export const actionLogin = (login, password) => async (dispatch) => {
         dispatch(actionAuthLogin(loginData.data.login));
         dispatch(actionUserInfo(store.getState().auth.payloadId));
 
-        history.push(`/main/${store.getState().auth.payloadId}`);
+        history.push(`/main`);
     } else {
         alert("Авторизация не прошла. Проверьте логин и пароль.");
     }

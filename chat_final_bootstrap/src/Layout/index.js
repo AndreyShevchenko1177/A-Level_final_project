@@ -1,6 +1,6 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { UserInfo } from "./UserInfo";
+import { CUserInfo } from "./UserInfo";
 import { Sidebar } from "./Sidebar";
 
-export { Header, Footer, UserInfo, Sidebar };
+export { Header, Footer, CUserInfo, Sidebar };

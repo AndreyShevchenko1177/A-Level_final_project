@@ -98,7 +98,7 @@ export const actionGetMessagesByChatId = (_chatId) => async (dispatch) => {
             )
         )
     );
-    // console.log(ChatFindOne);
+    // console.log("actionGetMessagesByChatId");
 };
 
 export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => {
@@ -128,5 +128,5 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
             )
         )
     );
-    // console.log("actionSearchChat - searchData:", searchData);
+    console.log("actionSearchChat - searchData:", searchData);
 };

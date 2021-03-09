@@ -10,23 +10,22 @@ import { useState, useEffect } from "react";
 const PageMain = ({
     match: {params: { _chatId }},
     _userId,
-    // getChatList = null,
+    getChatList = null,
     getMesagesList = null,
 }) => {
     // console.log("PageMain.js. - True _chatId: ", _chatId);
 
-    // useEffect(() => {
-    //     if (typeof getChatList === "function") {
-    //         getChatList(_userId);
-    //     }
-    // }, [_userId]);
+    useEffect(() => {
+        if (typeof getChatList === "function") {
+            getChatList(_userId);
+        }
+    }, [_userId]);
 
     useEffect(() => {
-        if (typeof getMesagesList === "function" && _chatId) {
+        if (typeof getMesagesList === "function") {
             getMesagesList(_chatId);
         }
     }, [_chatId]);
-
 
     if (
         //FIXME: надо засунуть router в redux
@@ -37,12 +36,18 @@ const PageMain = ({
     ) {
         history.push("/");
     }
-    
+
+    //FIXME: это временные _id
+    _userId = "5e97105693e2915e617c6fc1"; // login "Antipmen"
+    // if (_chatId) _chatId = "5e9ff91fd265602706d735cd"; // title "community"
+
+    // if (typeof getData === "function") getData(_userId);
+
     return (
         <div className="PageMain container-fluid">
             <div className="row g-3">
                 <div className="col-md-4">
-                    {/* {_userId + ` - подмена id`} */}
+                    {_userId + ` - подмена id`}
                     <Sidebar />
                 </div>
                 <div className="col-md-8">
@@ -54,7 +59,7 @@ const PageMain = ({
 };
 
 // prettier-ignore
-export const CPageMain = connect((s) => ({ _userId: s.auth && s.auth.payloadId }), {
-    // getChatList: actionSearchChat,
+export const CPageSearch = connect((s) => ({ _userId: s.auth && s.auth.payloadId }), {
+    getChatList: actionSearchChat,
     getMesagesList: actionGetMessagesByChatId,
 })(PageMain);

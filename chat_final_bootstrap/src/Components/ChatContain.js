@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import logo from "../images//logo23.jpg";
-import { actionSearchMessagesByChatId } from "../Actions";
+import { actionSearchMessagesByChatId, actionGetMessagesByChatId } from "../Actions";
 import ScrollableFeed from "react-scrollable-feed";
-import { urlConst } from "../const";
+import { urlUploadConst } from "../const";
 
 const MessageItem = ({
     _id,
@@ -16,6 +16,7 @@ const MessageItem = ({
     // первый _id - messageId
 
     if (!nick) nick = login;
+
     let date = new Date(+createdAt);
     let dateStr =
         date.getFullYear().toString().padStart(4, 0) +
@@ -34,43 +35,50 @@ const MessageItem = ({
         // <div className="list-group-item list-group-item-success m-2 gradient shadow-sm border-2">
         <div
             className={`messageItem list-group-item m-2 gradient shadow-sm border-2 ${
-                myId === ownerId
-                    ? "start-right list-group-item-success text-success"
-                    : " list-group-item-light text-red"
+                myId === ownerId ? "start-right list-group-item-success text-success" : " list-group-item-light"
             }`}
         >
             {/*  */}
-            {avatar && avatar.url ? (
-                <img src={`${urlConst}/${avatar.url}`}></img>
-            ) : (
-                <div className="bg-success border border-2 border-success gradient">
-                    {/* <i class="fs-3 text-light bi bi-chat-dots "></i> */}
-                    <p className="fs-5 text-light fw-bolder">
-                        {`${title.split(" ")[0][0].toUpperCase()}` +
-                            `${
-                                (title.split(" ").slice(1).pop() && title.split(" ").slice(1).pop()[0].toUpperCase()) ||
-                                ""
-                            }`}
-                    </p>
-                </div>
-            )}
+
+            <div className="roundIcon">
+                {avatar && avatar.url ? (
+                    <img
+                        src={`${urlUploadConst}/${avatar.url}`}
+                        className="bg-success border border-2 border-success"
+                    ></img>
+                ) : (
+                    <div className="bg-success border border-2 border-success gradient middleHeight">
+                        <p className="fs-5 text-light fw-bolder">
+                            {`${nick.split(" ")[0][0].toUpperCase()}` +
+                                `${
+                                    (nick.split(" ").slice(1).pop() &&
+                                        nick.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                    ""
+                                }`}
+                        </p>
+                    </div>
+                )}
+            </div>
 
             {/*  */}
             {/* <span>{`myid: ${myId}`}</span> */}
+
+            {/* <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p> */}
+            <div className="middleHeight mb-3">
+                <p className="text-dark fs-5 lh-sm">{`${nick}`}</p>
+            </div>
+            <div className="text-dark fs-5 lh-sm">{text}</div>
             <span>{`message id: ${_id}`}</span>
-            <br />
-            <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p>
-            <h5>{text}</h5>
-            <div>{dateStr}</div>
+            <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
+                {dateStr} <span className="visually-hidden">id чата</span>
+            </span>
+            {/* <div className="fs-6 text-end text-secondary">{dateStr}</div> */}
         </div>
     );
 };
 
 const MessagesList = ({ arrayOfMessages, myId }) => {
-    const messagesEndRef = useRef(null);
-
-    //FIXME: подмена myId
-    if (myId) myId = "5e97105693e2915e617c6fc1";
+    const messagesEndRef = useRef(null); // указатель на пустой div  в коце сообщений для перемотки
 
     // скролл в самый низ при приходе новых сообщений
     const scrollToBottom = () => messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -79,8 +87,6 @@ const MessagesList = ({ arrayOfMessages, myId }) => {
 
     return (
         <div className="Messages_map">
-            {/* //FIXME: */}
-            {/* {myId} */}
             {!!arrayOfMessages && arrayOfMessages.map((mess) => <MessageItem key={mess._id} {...mess} myId={myId} />)}
             <div ref={messagesEndRef} />
         </div>
@@ -110,50 +116,51 @@ const CMessagesList = connect(
     {}
 )(MessagesList);
 
-const Messages = ({ arrayOfMessages, avatar, _id = "", title = "No Title", doSearchMsg }) => {
+const Messages = ({ avatar, _id = "", title = "No Title", getMsg }) => {
     // id чата, аватар чата
 
-    const [searchMsgStr, setSearchMsgStr] = useState("");
-
     useEffect(() => {
-        if (typeof doSearchMsg === "function") doSearchMsg(_id, searchMsgStr);
-    }, [searchMsgStr, _id]);
+        if (typeof doSearchMsg === "function") getMsg(_id);
+    }, [_id]);
 
-    useEffect(() => {
-        if (typeof doSearchMsg === "function") doSearchMsg(_id, searchMsgStr);
-    }, []);
+    // useEffect(() => {
+    //     if (typeof doSearchMsg === "function") doSearchMsg(_id, searchMsgStr);
+    // }, []);
 
     return (
         <div className="Messages">
-            <input
+            {/* <input
                 placeholder="Search message"
                 onInput={(e) => setSearchMsgStr(e.target.value)}
                 className="form-control mb-2 p-2 border border-success border-2"
-            ></input>
+            ></input> */}
             {/* <span>🔍</span> */}
-            <div className=" messagesTitle mb-3 border border-3 border-success p-2">
-                {/* <img src={avatar && avatar.url ? urlConst + "/" + avatar.url : logo}></img> */}
-
-                {avatar && avatar.url ? (
-                    <img src={`${urlConst}/${avatar.url}`}></img>
-                ) : (
-                    <div className="bg-success border border-2 border-success gradient">
-                        {/* <i class="fs-3 text-light bi bi-chat-dots "></i> */}
-                        <p className="fs-5 text-light fw-bolder">
-                            {title &&
-                                `${title.split(" ")[0][0].toUpperCase()}` +
-                                    `${
-                                        (title.split(" ").slice(1).pop() &&
-                                            title.split(" ").slice(1).pop()[0].toUpperCase()) ||
-                                        ""
-                                    }`}
-                        </p>
+            <div className="position-relative">
+                <div className="messagesTitle mb-3 border-bottom border-2 border-success p-2 roundIcon">
+                    {avatar && avatar.url ? (
+                        <img src={`${urlUploadConst}/${avatar.url}`}></img>
+                    ) : (
+                        <div className="bg-success border border-2 border-success gradient">
+                            <p className="fs-5 text-light fw-bolder">
+                                {title &&
+                                    `${title.split(" ")[0][0].toUpperCase()}` +
+                                        `${
+                                            (title.split(" ").slice(1).pop() &&
+                                                title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                            ""
+                                        }`}
+                            </p>
+                        </div>
+                    )}
+                    <div className="middleHeight">
+                        <p className="fs-4 fw-bolder">{`${title}`}</p>
                     </div>
-                )}
-
-                <span className="ms-2 fs-4 fw-bolder">{`Title: ${title}`}</span>
-                {` _chatId: ${_id}`}
+                </div>
+                <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
+                    {` _chatId: ${_id}`} <span className="visually-hidden">id чата</span>
+                </span>
             </div>
+
             <div>
                 <CMessagesList />
             </div>
@@ -189,7 +196,7 @@ const CMessages = connect(
             s.promise.chatFindOne.payload.data.ChatFindOne &&
             s.promise.chatFindOne.payload.data.ChatFindOne.title,
     }),
-    { doSearchMsg: actionSearchMessagesByChatId }
+    { getMsg: actionGetMessagesByChatId }
 )(Messages);
 
 // const CMessagesList = connect((s) => ({

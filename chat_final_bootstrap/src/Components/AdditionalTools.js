@@ -6,27 +6,24 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 
 export const AdditionalTools = ({ _userId, onSearch = null }) => {
-    const [searchStr, setSearchStr] = useState("");
+    // const [searchStr, setSearchStr] = useState("");
 
-    //FIXME: отладочный _userId
-    if (_userId) _userId = "5e97105693e2915e617c6fc1";
-
-    useEffect(() => {
-        if (typeof onSearch === "function") {
-            onSearch(_userId, searchStr);
-            // console.log("AdditionalTools - run searchStr", _userId, searchStr);
-        }
-    }, [searchStr]);
+    // useEffect(() => {
+    //     if (typeof onSearch === "function") {
+    //         onSearch(_userId, searchStr);
+    //         // console.log("AdditionalTools - run searchStr", _userId, searchStr);
+    //     }
+    // }, [searchStr]);
 
     return (
         <div className="bg-light mb-2 text-nowrap">
-            <input
+            {/* <input
                 className="form-control mb-2 p-2 border border-success border-2"
                 placeholder="Search by title in my chats"
                 onInput={(e) => {
                     setSearchStr(e.target.value);
                 }}
-            ></input>
+            ></input> */}
             {/* <span>🔍</span> */}
             <Button
                 className="gradient"
@@ -47,6 +44,6 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
 export const CAdditionalTools = connect(
     (s) => ({
         _userId: s.auth && s.auth.payloadId,
-    }),
-    { onSearch: actionSearchChat }
+    })
+    // { onSearch: actionSearchChat }
 )(AdditionalTools);

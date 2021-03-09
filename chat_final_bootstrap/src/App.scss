@@ -5,6 +5,14 @@ $position-values: (
     20: 20%,
 );
 
+// // Create your own map
+// $custom-colors: (
+//     "custom-color": #900,
+// );
+
+// // Merge the maps
+// $theme-colors: map-merge($theme-colors, $custom-colors);
+
 div {
     border-radius: 7px;
     // border: 1px solid red;
@@ -35,16 +43,30 @@ body {
 }
 
 .ChatsList {
-    max-height: calc(100vh - 350px);
+    max-height: calc(100vh - 220px);
     overflow: auto;
 
-    div:first-child {
+    div:nth-child(2) {
+        padding-left: 55px;
+    }
+
+    img {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.roundIcon {
+    div:first-child,
+    img {
         position: relative;
         width: 48px;
         height: 48px;
         border-radius: 50%;
         overflow: hidden;
         float: left;
+        margin-right: 10px;
+
         i,
         p {
             color: honeydew;
@@ -56,14 +78,18 @@ body {
             transform: translate(-52%, -55%);
         }
     }
+}
 
-    div:nth-child(2) {
-        padding-left: 55px;
-    }
-
-    img {
-        width: 48px;
-        height: 48px;
+.middleHeight {
+    position: relative;
+    height: 48px;
+    p {
+        // margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 0%;
+        // margin-right: -50%;
+        transform: translate(55px, -55%);
     }
 }
 
@@ -79,32 +105,10 @@ body {
     input {
         width: 80%;
     }
-    .MessagesList_map {
-        max-height: 70vh;
-        overflow: auto;
-    }
 }
 
 .messagesTitle {
     min-height: 70px;
-    div:first-child {
-        position: relative;
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        overflow: hidden;
-        float: left;
-        i,
-        p {
-            color: honeydew;
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-right: -50%;
-            transform: translate(-52%, -55%);
-        }
-    }
 }
 
 .messageItem {
@@ -115,13 +119,14 @@ body {
     background-color: lightgreen;
 }
 
-.ChatItem {
-    img {
-        max-width: 50px;
-    }
-    p {
-        font-weight: 700;
-    }
+.chatItem {
+    min-height: 70px;
+    // img {
+    //     max-width: 50px;
+    // }
+    // p {
+    //     font-weight: 700;
+    // }
 }
 
 .gradient {

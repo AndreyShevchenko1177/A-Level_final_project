@@ -45,7 +45,7 @@ const PageMain = ({
                     {/* {_userId + ` - подмена id`} */}
                     <Sidebar/>
                 </div>
-                <div className="col-md-8">
+                <div className="col-md-8 fonRomaska">
                     <ChatContain _chatId={_chatId} />
                 </div>
             </div>

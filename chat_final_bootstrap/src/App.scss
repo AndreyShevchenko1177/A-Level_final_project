@@ -98,6 +98,10 @@ body {
     overflow: auto;
 }
 
+.fonRomaska {
+    background: url("./images/romashki_1920x1080.jpg");
+}
+
 .Messages {
     img {
         width: 50px;
@@ -146,3 +150,4 @@ body {
 }
 
 @import "/node_modules/bootstrap/scss/bootstrap";
+@import "./login.scss";

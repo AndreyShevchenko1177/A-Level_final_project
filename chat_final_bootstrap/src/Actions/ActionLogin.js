@@ -41,10 +41,18 @@ export const actionUserInfo = (userId) => async (dispatch) => {
         )
     );
 
-    // console.log("UserFindOne - ##########", userData.data.UserFindOne);
+    console.log("UserFindOne - ##########", userData.data.UserFindOne);
 
     if (userData && userData.data.UserFindOne) {
         dispatch(actionAuthInfo(userData.data.UserFindOne));
+
+        //
+        //
+        //
+        //
+        //
+        //
+        //
     } else {
         console.log("UserFindOne - ошибка");
     }

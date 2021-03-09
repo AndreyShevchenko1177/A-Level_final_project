@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import logo from "../images//logo23.jpg";
-import { actionSearchMessagesByChatId, actionGetMessagesByChatId } from "../Actions";
+import { actionGetMessagesByChatId } from "../Actions";
 import ScrollableFeed from "react-scrollable-feed";
 import { urlUploadConst } from "../const";
 
@@ -107,15 +107,7 @@ const MessagesList = ({ messages, myId, chatId }) => {
 
 const CMessagesList = connect(
     (s) => ({
-        //FIXME: приконнектить массив сообщений
-        chatId:
-            s.promise.MessageFind &&
-            s.promise.MessageFind.payload &&
-            s.promise.MessageFind.payload.data &&
-            s.promise.MessageFind.payload.data.MessageFind &&
-            s.promise.MessageFind.payload.data.MessageFind[0] &&
-            s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-            s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
+        chatId: s.curChatId.curChatId,
         messages: s.msg,
         myId: s.auth && s.auth.payloadId,
     }),
@@ -125,11 +117,23 @@ const CMessagesList = connect(
 const Messages = ({ _id = "", messages, getMsg }) => {
     // id чата,
 
+    // console.log("Messages - id - ", _id);
+    // console.log(
+    //     "Messages - - ",
+    //     !(messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat._id)
+    // );
+
     let avatar = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.avatar;
     let title = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.title;
 
     useEffect(() => {
-        if (typeof doSearchMsg === "function") getMsg(_id);
+        if (
+            typeof doSearchMsg === "function" &&
+            !(messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat._id)
+        ) {
+            // console.log("пошли искать");
+            getMsg(_id);
+        }
     }, [_id]);
 
     // useEffect(() => {
@@ -138,12 +142,6 @@ const Messages = ({ _id = "", messages, getMsg }) => {
 
     return (
         <div className="Messages">
-            {/* <input
-                placeholder="Search message"
-                onInput={(e) => setSearchMsgStr(e.target.value)}
-                className="form-control mb-2 p-2 border border-success border-2"
-            ></input> */}
-            {/* <span>🔍</span> */}
             <div className="position-relative">
                 <div className="messagesTitle mb-3 border-bottom border-2 border-success p-2 roundIcon">
                     {avatar && avatar.url ? (
@@ -177,74 +175,10 @@ const Messages = ({ _id = "", messages, getMsg }) => {
     );
 };
 
-const CMessages = connect(
-    (s) => ({
-        //id чата
-        _id:
-            s.promise.MessageFind &&
-            s.promise.MessageFind.payload &&
-            s.promise.MessageFind.payload.data &&
-            s.promise.MessageFind.payload.data.MessageFind &&
-            s.promise.MessageFind.payload.data.MessageFind[0] &&
-            s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-            s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
-        messages: s.msg,
-        //     s.promise.chatFindOne.payload &&
-        //     s.promise.chatFindOne.payload.data &&
-        //     s.promise.chatFindOne.payload.data.ChatFindOne &&
-        //     s.promise.chatFindOne.payload.data.ChatFindOne.messages,
-        // avatar:
-        //     s.promise.MessageFind &&
-        //     s.promise.MessageFind.payload &&
-        //     s.promise.MessageFind.payload.data &&
-        //     s.promise.MessageFind.payload.data.MessageFind &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0] &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0].chat.avatar,
-        // title:
-        //     s.promise.MessageFind &&
-        //     s.promise.MessageFind.payload &&
-        //     s.promise.MessageFind.payload.data &&
-        //     s.promise.MessageFind.payload.data.MessageFind &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0] &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-        //     s.promise.MessageFind.payload.data.MessageFind[0].chat.title,
-    }),
-    { getMsg: actionGetMessagesByChatId }
-)(Messages);
-
-// const CMessagesList = connect((s) => ({
-//     //id чата
-//     _id:
-//         s.promise.MessageFind &&
-//         s.promise.MessageFind.payload &&
-//         s.promise.MessageFind.payload.data &&
-//         s.promise.MessageFind.payload.data.MessageFind &&
-//         s.promise.MessageFind.payload.data.MessageFind[0] &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
-//     arrayOfMessages:
-//         s.promise.MessageFind &&
-//         s.promise.MessageFind.payload &&
-//         s.promise.MessageFind.payload.data &&
-//         s.promise.MessageFind.payload.data.MessageFind,
-//     avatar:
-//         s.promise.MessageFind &&
-//         s.promise.MessageFind.payload &&
-//         s.promise.MessageFind.payload.data &&
-//         s.promise.MessageFind.payload.data.MessageFind &&
-//         s.promise.MessageFind.payload.data.MessageFind[0] &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat.avatar,
-//     title:
-//         s.promise.MessageFind &&
-//         s.promise.MessageFind.payload &&
-//         s.promise.MessageFind.payload.data &&
-//         s.promise.MessageFind.payload.data.MessageFind &&
-//         s.promise.MessageFind.payload.data.MessageFind[0] &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-//         s.promise.MessageFind.payload.data.MessageFind[0].chat.title,
-// }))(MessagesList);
+const CMessages = connect((s) => ({ _id: s.curChatId.curChatId, messages: s.msg }), {
+    getMsg: actionGetMessagesByChatId,
+})(Messages);
+// - id chata
 
 export const ChatContain = ({ _chatId = "" }) => (
     <div className="ChatContain">

@@ -8,11 +8,12 @@ import history from "../history";
 import { useEffect } from "react";
 import { useState } from "react";
 
-const CCounter = connect;
+// const CCounter = connect;
 
 const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) => {
     // здесь _id, avatar, title - чата,
     // currentChatId - текущий выбраный чат
+    // console.log("ChatItem - ", _id, currentChatId);
 
     return (
         <Link to={`/main/${_id}`} className="noUnderLine">
@@ -62,6 +63,8 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
 };
 
 const List = ({ arrayOfChats, userId, currentChatId }) => {
+    // console.log(arrayOfChats);
+    // arrayOfChats - массив всех чатов пользователя
     if (!arrayOfChats) return <></>;
 
     // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
@@ -87,6 +90,7 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
     });
 
     // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
+    // console.log("chatsList - : ", currentChatId);
 
     return (
         <ul className="list-group" role="tablist">
@@ -98,15 +102,7 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
 };
 
 const CList = connect((s) => ({
-    currentChatId:
-        s.promise &&
-        s.promise.MessageFind &&
-        s.promise.MessageFind.payload &&
-        s.promise.MessageFind.payload.data &&
-        s.promise.MessageFind.payload.data.MessageFind &&
-        s.promise.MessageFind.payload.data.MessageFind[0] &&
-        s.promise.MessageFind.payload.data.MessageFind[0].chat &&
-        s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
+    currentChatId: s.curChatId && s.curChatId.curChatId,
 
     //FIXME: для сортировки надо подсоеденить правильный массив
     arrayOfChats: s.auth && s.auth.chats,

@@ -63,6 +63,14 @@ function msgReduser(state = {}, action) {
     return state;
 }
 
+function currentChatIdReduser(state = {}, action) {
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {}; // кликнули по новому чату в sideBar
+    if (action.type === "CURRENTID") {
+        return { curChatId: action.curChatId };
+    }
+    return state;
+}
+
 function promiseReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
     if (action.type === "PROMISE") {
@@ -100,7 +108,7 @@ export const actionPromise = (name, promise) => {
 };
 
 export const store = createStore(
-    combineReducers({ auth: authReducer, promise: promiseReducer, msg: msgReduser }),
+    combineReducers({ auth: authReducer, promise: promiseReducer, msg: msgReduser, curChatId: currentChatIdReduser }),
     applyMiddleware(thunk)
 );
 

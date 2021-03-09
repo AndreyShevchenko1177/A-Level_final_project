@@ -32,7 +32,6 @@ const MessageItem = ({
     // date.getSeconds().toString().padStart(2, 0);
 
     return (
-        // <div className="list-group-item list-group-item-success m-2 gradient shadow-sm border-2">
         <div
             className={`messageItem list-group-item m-2 gradient shadow-sm border-2 ${
                 myId === ownerId ? "start-right list-group-item-success text-success" : " list-group-item-light"
@@ -77,8 +76,10 @@ const MessageItem = ({
     );
 };
 
-const MessagesList = ({ arrayOfMessages, myId }) => {
+const MessagesList = ({ messages, myId, chatId }) => {
     const messagesEndRef = useRef(null); // указатель на пустой div  в коце сообщений для перемотки
+
+    let arrayOfMessages = messages[chatId];
 
     // скролл в самый низ при приходе новых сообщений
     const scrollToBottom = () => messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
@@ -106,18 +107,26 @@ const MessagesList = ({ arrayOfMessages, myId }) => {
 
 const CMessagesList = connect(
     (s) => ({
-        arrayOfMessages:
+        //FIXME: приконнектить массив сообщений
+        chatId:
             s.promise.MessageFind &&
             s.promise.MessageFind.payload &&
             s.promise.MessageFind.payload.data &&
-            s.promise.MessageFind.payload.data.MessageFind,
+            s.promise.MessageFind.payload.data.MessageFind &&
+            s.promise.MessageFind.payload.data.MessageFind[0] &&
+            s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+            s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
+        messages: s.msg,
         myId: s.auth && s.auth.payloadId,
     }),
     {}
 )(MessagesList);
 
-const Messages = ({ avatar, _id = "", title = "No Title", getMsg }) => {
-    // id чата, аватар чата
+const Messages = ({ _id = "", messages, getMsg }) => {
+    // id чата,
+
+    let avatar = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.avatar;
+    let title = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.title;
 
     useEffect(() => {
         if (typeof doSearchMsg === "function") getMsg(_id);
@@ -172,29 +181,34 @@ const CMessages = connect(
     (s) => ({
         //id чата
         _id:
-            s.promise.chatFindOne &&
-            s.promise.chatFindOne.payload &&
-            s.promise.chatFindOne.payload.data &&
-            s.promise.chatFindOne.payload.data.ChatFindOne &&
-            s.promise.chatFindOne.payload.data.ChatFindOne._id,
-        arrayOfMessages:
-            s.promise.chatFindOne &&
-            s.promise.chatFindOne.payload &&
-            s.promise.chatFindOne.payload.data &&
-            s.promise.chatFindOne.payload.data.ChatFindOne &&
-            s.promise.chatFindOne.payload.data.ChatFindOne.messages,
-        avatar:
-            s.promise.chatFindOne &&
-            s.promise.chatFindOne.payload &&
-            s.promise.chatFindOne.payload.data &&
-            s.promise.chatFindOne.payload.data.ChatFindOne &&
-            s.promise.chatFindOne.payload.data.ChatFindOne.avatar,
-        title:
-            s.promise.chatFindOne &&
-            s.promise.chatFindOne.payload &&
-            s.promise.chatFindOne.payload.data &&
-            s.promise.chatFindOne.payload.data.ChatFindOne &&
-            s.promise.chatFindOne.payload.data.ChatFindOne.title,
+            s.promise.MessageFind &&
+            s.promise.MessageFind.payload &&
+            s.promise.MessageFind.payload.data &&
+            s.promise.MessageFind.payload.data.MessageFind &&
+            s.promise.MessageFind.payload.data.MessageFind[0] &&
+            s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+            s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
+        messages: s.msg,
+        //     s.promise.chatFindOne.payload &&
+        //     s.promise.chatFindOne.payload.data &&
+        //     s.promise.chatFindOne.payload.data.ChatFindOne &&
+        //     s.promise.chatFindOne.payload.data.ChatFindOne.messages,
+        // avatar:
+        //     s.promise.MessageFind &&
+        //     s.promise.MessageFind.payload &&
+        //     s.promise.MessageFind.payload.data &&
+        //     s.promise.MessageFind.payload.data.MessageFind &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0] &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0].chat.avatar,
+        // title:
+        //     s.promise.MessageFind &&
+        //     s.promise.MessageFind.payload &&
+        //     s.promise.MessageFind.payload.data &&
+        //     s.promise.MessageFind.payload.data.MessageFind &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0] &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+        //     s.promise.MessageFind.payload.data.MessageFind[0].chat.title,
     }),
     { getMsg: actionGetMessagesByChatId }
 )(Messages);

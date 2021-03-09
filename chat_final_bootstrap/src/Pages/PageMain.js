@@ -2,7 +2,7 @@ import { ChatContain } from "../Components";
 import { Sidebar } from "../Layout";
 import { store } from "../Reducers";
 import history from "../history";
-import { actionGetMessagesByChatId, actionSearchChat } from "../Actions";
+import { actionGetMessagesByChatId, actionSearchChat, actionSearchMessagesByChatId } from "../Actions";
 import { connect } from "react-redux";
 import { useState, useEffect } from "react";
 
@@ -43,7 +43,7 @@ const PageMain = ({
             <div className="row g-3">
                 <div className="col-md-4">
                     {/* {_userId + ` - подмена id`} */}
-                    <Sidebar />
+                    <Sidebar/>
                 </div>
                 <div className="col-md-8">
                     <ChatContain _chatId={_chatId} />
@@ -56,5 +56,5 @@ const PageMain = ({
 // prettier-ignore
 export const CPageMain = connect((s) => ({ _userId: s.auth && s.auth.payloadId }), {
     // getChatList: actionSearchChat,
-    getMesagesList: actionGetMessagesByChatId,
+    getMesagesList: actionSearchMessagesByChatId,
 })(PageMain);

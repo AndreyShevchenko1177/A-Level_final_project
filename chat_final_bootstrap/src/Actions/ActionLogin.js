@@ -32,6 +32,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
                                 _id
                                 title
                                 avatar {url}
+                                members{_id login nick avatar{url}}
                                 }
                         }
                     }`,

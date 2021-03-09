@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { Counter } from "../Components";
 import personFillIcon from "../icons/person-fill.svg";
 import history from "../history";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const CCounter = connect;
 
@@ -52,7 +54,7 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                         {Counter(_id)}
                         <span className="visually-hidden">всего сообщений</span>
                     </span>
-                    {/* <span className="text-nowrap"> chatID: {_id}</span> */}
+                    <span className="text-nowrap"> chatID: {_id}</span>
                 </li>
             </>
         </Link>
@@ -97,12 +99,16 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
 
 const CList = connect((s) => ({
     currentChatId:
-        s.promise.chatFindOne &&
-        s.promise.chatFindOne.payload &&
-        s.promise.chatFindOne.payload.data &&
-        s.promise.chatFindOne.payload.data.ChatFindOne &&
-        s.promise.chatFindOne.payload.data.ChatFindOne._id,
+        s.promise &&
+        s.promise.MessageFind &&
+        s.promise.MessageFind.payload &&
+        s.promise.MessageFind.payload.data &&
+        s.promise.MessageFind.payload.data.MessageFind &&
+        s.promise.MessageFind.payload.data.MessageFind[0] &&
+        s.promise.MessageFind.payload.data.MessageFind[0].chat &&
+        s.promise.MessageFind.payload.data.MessageFind[0].chat._id,
 
+    //FIXME: для сортировки надо подсоеденить правильный массив
     arrayOfChats: s.auth && s.auth.chats,
 
     userId: s.auth && s.auth.payloadId,

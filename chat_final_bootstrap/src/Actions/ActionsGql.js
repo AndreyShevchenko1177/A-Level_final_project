@@ -2,6 +2,7 @@
 
 import { urlConst } from "../const";
 import { actionPromise } from "../Reducers";
+import { actionMsgAdd } from "../Actions";
 
 const getGQL = (url) => (query, variables = {}) => {
     return fetch(url, {
@@ -27,16 +28,16 @@ const toQuery = (str, fields = ["title", "text"]) => {
     return { $or: arr };
 };
 
-export const actionSearchMessagesByChatId = (_chatId, str) => async (dispatch) => {
-    let searchStr;
+export const actionSearchMessagesByChatId = (_chatId, skip = 0, limit = 10, str = "") => async (dispatch) => {
+    let searchObj;
     str = toQuery(str);
 
     if (_chatId) {
-        searchStr = { $and: [{ "chat._id": _chatId }] };
-        searchStr.$and.push(str);
-    } else searchStr = { str };
+        searchObj = { $and: [{ "chat._id": _chatId }] };
+        searchObj.$and.push(str);
+    } else searchObj = { str };
 
-    let ChatFindOne = await dispatch(
+    let messages = await dispatch(
         actionPromise(
             "MessageFind",
             gql(
@@ -59,11 +60,15 @@ export const actionSearchMessagesByChatId = (_chatId, str) => async (dispatch) =
                         }
                     }
                 }`,
-                { searchMsgStr: JSON.stringify([searchStr, { sort: [{ _id: 1 }] }]) }
+                { searchMsgStr: JSON.stringify([searchObj, { sort: [{ _id: -1 }], skip: [skip], limit: [limit] }]) }
             )
         )
     );
-    // console.log("actionFindMessagesByChatId result: ", ChatFindOne);
+    // console.log("actionFindMessagesByChatId result: ", messages);
+
+    if (messages && messages.data && messages.data.MessageFind && messages.data.MessageFind.length) {
+        dispatch(actionMsgAdd(messages.data.MessageFind.reverse()));
+    }
 };
 
 // получить все сообщения из чата с такм-то _id
@@ -77,9 +82,7 @@ export const actionGetMessagesByChatId = (_chatId) => async (dispatch) => {
                         _id
                         title
                         createdAt
-                        members {
-                            login
-                        }
+                        members {login}
                         messages {
                             _id
                             createdAt
@@ -89,16 +92,14 @@ export const actionGetMessagesByChatId = (_chatId) => async (dispatch) => {
                             }
                             text
                         }
-                        avatar {
-                            url
-                        }
+                        avatar {url}
                     }
                     }`,
                 { chatId: JSON.stringify([{ _id: _chatId }, { sort: [{ _id: 1 }] }]) }
             )
         )
     );
-    // console.log("actionGetMessagesByChatId");
+    console.log("actionGetMessagesByChatId");
 };
 
 export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => {

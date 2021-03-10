@@ -7,8 +7,8 @@ import { connect } from "react-redux";
 
 const UserInfo = ({ avatarUrl }) => (
     <div className="userInfo bg-gradient bg-success text-white p-1 py-2 mb-2 text-white">
-        <Link to="/dashboard" className="userInfo noUnderLine">
-            <span className="m-2  text-nowrap">
+        <Link to="/dashboard" className="noUnderLine">
+            <span className="m-2  text-nowrap avatarka">
                 <img
                     className="border border-2 border-success bg-light"
                     src={avatarUrl ? `${urlUploadConst}/${avatarUrl}` : personFillIcon}

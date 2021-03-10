@@ -37,63 +37,37 @@ div {
 
 body {
     overflow: hidden;
+    background: url("./images/romashki_1920x1080.jpg");
 }
+
+.mainWrapper {
+    min-width: 250px;
+}
+
 .header {
-    min-width: 360px;
+    min-width: 250px;
 }
 
 .ChatsList {
     max-height: calc(100vh - 220px);
     overflow: auto;
 
-    div:nth-child(2) {
-        padding-left: 55px;
-    }
-
     img {
         width: 48px;
         height: 48px;
     }
 }
 
-.roundIcon {
-    div:first-child,
-    img {
-        position: relative;
-        width: 48px;
-        height: 48px;
+.avatarka {
+    > img,
+    > div {
         border-radius: 50%;
-        overflow: hidden;
-        float: left;
-        margin-right: 10px;
-
-        i,
-        p {
-            color: honeydew;
-            margin: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-right: -50%;
-            transform: translate(-52%, -55%);
-        }
+        width: 48px;
+        height: 48px;
     }
 }
 
-.middleHeight {
-    position: relative;
-    height: 48px;
-    p {
-        // margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 0%;
-        // margin-right: -50%;
-        transform: translate(55px, -55%);
-    }
-}
-
-.Messages_map {
+.MessagesList {
     max-height: calc(100vh - 350px);
     overflow: auto;
 }
@@ -102,21 +76,16 @@ body {
     background: url("./images/romashki_1920x1080.jpg");
 }
 
-.Messages {
-    img {
-        width: 50px;
-    }
-    input {
-        width: 80%;
-    }
-}
+// .Messages {
 
-.messagesTitle {
-    min-height: 70px;
-}
+//     input {
+//         width: 70%;
+//     }
+// }
 
 .messageItem {
-    width: 80%;
+    // width: 75%;
+    width: calc(100% - 120px);
 }
 
 .LoginForm {
@@ -125,12 +94,6 @@ body {
 
 .chatItem {
     min-height: 70px;
-    // img {
-    //     max-width: 50px;
-    // }
-    // p {
-    //     font-weight: 700;
-    // }
 }
 
 .gradient {
@@ -139,14 +102,6 @@ body {
 
 .noUnderLine {
     text-decoration: none;
-}
-
-.userInfo {
-    // background-color: darkseagreen;
-    img {
-        width: 48px;
-        border-radius: 50%;
-    }
 }
 
 @import "/node_modules/bootstrap/scss/bootstrap";

@@ -11,7 +11,8 @@ export const actionAuthLogout = () => {
     return { type: "LOGOUT" };
 };
 
-export const actionAuthInfo = ({ login, nick, _id, avatar: { url } = { url: null }, chats = [] }) => {
+export const actionAuthInfo = ({ login, nick, _id, avatar, chats = [] }) => {
+    let url = avatar && avatar.url;
     // console.log("actionAuthInfo - ", login, nick, _id, url);
     return { type: "INFO", userInfo: { login, nick, _id, url, chats } };
 };
@@ -41,7 +42,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
         )
     );
 
-    console.log("UserFindOne - ##########", userData.data.UserFindOne);
+    // console.log("UserFindOne - ##########", userData.data.UserFindOne);
 
     if (userData && userData.data.UserFindOne) {
         dispatch(actionAuthInfo(userData.data.UserFindOne));

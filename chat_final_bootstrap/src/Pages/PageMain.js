@@ -33,8 +33,6 @@ if (
     //
     //
     //
-    //FIXME:  не посылать запрос если меседжи есть
-    //завести редакс для курент_ид
     //
     //
     //
@@ -57,10 +55,9 @@ if (
         <div className="PageMain container-fluid">
             <div className="row g-3">
                 <div className="col-md-4">
-                    {/* {_userId + ` - подмена id`} */}
                     <Sidebar />
                 </div>
-                <div className="col-md-8 fonRomaska">
+                <div className="col-md-8">
                     <ChatContain _chatId={_chatId} />
                 </div>
             </div>

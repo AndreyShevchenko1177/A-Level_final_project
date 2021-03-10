@@ -33,21 +33,23 @@ const PageNotFound = () => {
 const App = () => (
     <Provider store={store}>
         <Router history={history}>
-            <Header />
+            <div className="mainWrapper">
+                <Header />
 
-            <Switch>
-                <Route path="/about" component={PageAbout} exact />
-                <Route path="/newchat" component={PageNewChat} exact />
-                <Route path="/upload" component={PageUpload} exact />
-                <Route path="/" component={PageLogin} exact />
-                <Route path="/main/:_chatId" component={CPageMain} exact />
-                <Route path="/main/" component={CPageMain} exact />
-                <Route path="/search/" component={CPageSearch} exact />
+                <Switch>
+                    <Route path="/about" component={PageAbout} exact />
+                    <Route path="/newchat" component={PageNewChat} exact />
+                    <Route path="/upload" component={PageUpload} exact />
+                    <Route path="/" component={PageLogin} exact />
+                    <Route path="/main/:_chatId" component={CPageMain} exact />
+                    <Route path="/main/" component={CPageMain} exact />
+                    <Route path="/search/" component={CPageSearch} exact />
 
-                <Route component={PageNotFound} exact />
-            </Switch>
+                    <Route component={PageNotFound} exact />
+                </Switch>
 
-            {/* <Footer /> */}
+                {/* <Footer /> */}
+            </div>
         </Router>
     </Provider>
 );

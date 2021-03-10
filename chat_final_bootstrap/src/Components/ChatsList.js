@@ -20,36 +20,36 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
             <>
                 <li
                     className={
-                        "roundIcon chatItem " +
-                        (_id === currentChatId
+                        _id === currentChatId
                             ? "list-group-item list-group-item-success m-1 gradient shadow border-2"
-                            : "list-group-item list-group-item-light m-1 gradient shadow-sm border-2")
+                            : "list-group-item list-group-item-light m-1 gradient shadow-sm border-2"
                     }
                 >
-                    {avatar && avatar.url ? (
-                        <img src={`${urlConst}/${avatar.url}`}></img>
-                    ) : (
-                        <div className="bg-success border border-2 border-success gradient">
-                            {/* <i className="fs-3 text-light bi bi-chat-dots "></i> */}
-                            <p className="fs-5 text-light fw-bolder">
-                                {title &&
-                                    `${title.split(" ")[0][0].toUpperCase()}` +
-                                        `${
-                                            (title.split(" ").slice(1).pop() &&
-                                                title.split(" ").slice(1).pop()[0].toUpperCase()) ||
-                                            ""
-                                        }`}
-                            </p>
-                        </div>
-                    )}
-                    <div className="text-success text-dark middleHeight">
-                        <p className="text-dark fs-5 fw-bolder lh-sm">{`${title}`}</p>
-                        <br />
+                    <div className="d-flex justify-content-start align-items-center">
 
-                        {/* счетчик сообщений */}
-                        {/* <span>Count of msg: {messages && messages.length ? messages.length : 0}</span> */}
-                        {/* <span>Count of msg: {Counter(_id)}</span> */}
-                        {/* <div className="">{Counter(_id)}</div> */}
+
+
+                        <div className="avatarka ">
+                            {avatar && avatar.url ? (
+                                <img src={`${urlConst}/${avatar.url}`}></img>
+                            ) : (
+                                <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
+                                    <div className="fs-5 text-light fw-bolder">
+                                        {title &&
+                                            `${title.split(" ")[0][0].toUpperCase()}` +
+                                                `${
+                                                    (title.split(" ").slice(1).pop() &&
+                                                        title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                                    ""
+                                                }`}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        
+
+                        <div className="text-dark fs-5 fw-bolder ms-2">{`${title}`}</div>
                     </div>
                     <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                         {Counter(_id)}
@@ -103,10 +103,7 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
 
 const CList = connect((s) => ({
     currentChatId: s.curChatId && s.curChatId.curChatId,
-
-    //FIXME: для сортировки надо подсоеденить правильный массив
     arrayOfChats: s.auth && s.auth.chats,
-
     userId: s.auth && s.auth.payloadId,
 }))(List);
 

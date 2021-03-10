@@ -17,7 +17,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
     const containerR_ref = useRef(null);
 
     // console.log(login, pass, nick);
-    console.log(isLoggedIn, !!isLoggedIn);
+    // console.log(isLoggedIn, !!isLoggedIn);
 
     //FIXME: надо засунуть router в redux
     if (store.getState().auth && store.getState().auth.login && localStorage.authToken) {
@@ -81,7 +81,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             className="btn_view"
                             onClick={() => {
                                 onRegistration(login, pass, nick);
-                                console.log("кнопка регистрации нажата");
+                                // console.log("кнопка регистрации нажата");
                             }}
                             disabled={isLoggedIn || !login || !pass || !nick}
                         >
@@ -120,7 +120,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             className="btn_view"
                             onClick={() => {
                                 onLogin(login, pass, nick);
-                                console.log("кнопка лагин нажата");
+                                // console.log("кнопка логин нажата");
                             }}
                             disabled={isLoggedIn || !login || !pass}
                         >

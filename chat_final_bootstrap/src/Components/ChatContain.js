@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import logo from "../images//logo23.jpg";
-import { actionGetMessagesByChatId } from "../Actions";
+import { actionGetMessagesByChatId, actionSearchMessagesByChatId } from "../Actions";
 import ScrollableFeed from "react-scrollable-feed";
 import { urlUploadConst } from "../const";
 
@@ -72,35 +72,49 @@ const MessageItem = ({
     );
 };
 
-const MessagesList = ({ messages, myId, chatId }) => {
+const MessagesList = ({ messages, myId, chatId, getMoreMessages = null }) => {
     const messagesEndRef = useRef(null); // указатель на пустой div  в коце сообщений для перемотки
     const messagesListBlockRef = useRef(null); // для отслеживания скролла
-    const [offset, setOffset] = useState(0); // для отслеживания скролла
-
-    // const height = messagesListBlockRef.current.scrollHeight - messagesListBlockRef.current.clientHeight;
-    // console.log(height);
-    console.log(offset);
+    const [offset, setOffset] = useState(Infinity); // для отслеживания скролла
+    const [height, setHeight] = useState(Infinity); // для отслеживания скролла
+    const [oldScrollHeight, seOldScrollHeight] = useState(Infinity); // для отслеживания скролла
+    const isNeedMoreMessages = useRef(false);
 
     let arrayOfMessages = messages[chatId];
+    // console.log(isNeedMoreMessages.current, arrayOfMessages && arrayOfMessages.length);
 
-    // скролл в самый низ при приходе новых сообщений
-    const scrollToBottom = () => messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    // скролл в самый низ при приходе новых сообщений, scrollIntoView({ behavior: "smooth" }) - плавно
+    const scrollToBottom = () => {
+        if (height - offset < 10) {
+            messagesEndRef.current.scrollIntoView();
+        } else {
+            messagesListBlockRef.current.scrollTop = messagesListBlockRef.current.scrollHeight - oldScrollHeight;
+            // messagesListBlockRef.current.style.overflow = "auto";
+        }
+        isNeedMoreMessages.current = false;
+    };
     useEffect(scrollToBottom, [arrayOfMessages]);
 
     useEffect(() => {
-        //отслеживает событие скролла
+        // вешаем обработчик скрола
         messagesListBlockRef.current.onscroll = () => {
             setOffset(Math.floor(messagesListBlockRef.current.scrollTop));
+            seOldScrollHeight(messagesListBlockRef.current.scrollHeight);
         };
+    }, []);
 
-        // if (height === offset) {
-        //     getUsers(skip, limit); //  actionAllUsers= (skipArg, limitArg)=>{...}
-        //     setSkip(limit);
-        //     setLimit((prev) => prev + 10);
-        //     // console.log(allUsers, "getUs");
-        //     // console.log(height, "height");
-        //     // console.log(offset);
-        // }
+    useEffect(() => {
+        setHeight(messagesListBlockRef.current.scrollHeight - messagesListBlockRef.current.clientHeight);
+        setTimeout(() => {
+            if (offset < 5) {
+                if (!isNeedMoreMessages.current) {
+                    isNeedMoreMessages.current = true;
+                    // messagesListBlockRef.current.style.overflow = "hidden";
+                    if (typeof getMoreMessages === "function")
+                        getMoreMessages(chatId, arrayOfMessages && arrayOfMessages.length);
+                }
+            }
+        }, 16);
     }, [offset]);
 
     return (
@@ -111,7 +125,7 @@ const MessagesList = ({ messages, myId, chatId }) => {
     );
 };
 
-// скролл вниз при новых сообщениях только если мы ща уже внизу
+// скролл вниз при новых сообщениях только если мы на этот момент уже были внизу внизу
 // const MessagesList = ({ arrayOfMessages }) => {
 //     return (
 //         <div className="MessagesList">
@@ -128,7 +142,7 @@ const CMessagesList = connect(
         messages: s.msg,
         myId: s.auth && s.auth.payloadId,
     }),
-    {}
+    { getMoreMessages: actionSearchMessagesByChatId }
 )(MessagesList);
 
 const Messages = ({ _id = "", messages, getMsg }) => {

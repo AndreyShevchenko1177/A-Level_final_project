@@ -1,8 +1,13 @@
 //
 
-export const actionMsgAdd = (msgArr) => {
+export const actionMsgNewChat = (msgArr) => {
     // console.log("actionMsgAdd - ", JSON.stringify(msgArr, null, 4));
-    return { type: "ADDMSG", msgs: { [msgArr[0].chat._id]: msgArr } };
+    return { type: "NEW_CHAT", msgs: { [msgArr[0].chat._id]: msgArr } };
+};
+
+export const actionMsgInsertInHead = (msgArr) => {
+    // console.log("actionMsgAdd - ", JSON.stringify(msgArr, null, 4));
+    return { type: "CHAT_INS_HEAD", msgs: { [msgArr[0].chat._id]: msgArr } };
 };
 
 export const actionCurChatId = (curChatId) => ({ type: "CURRENTID", curChatId });

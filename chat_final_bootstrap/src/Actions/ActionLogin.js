@@ -46,14 +46,6 @@ export const actionUserInfo = (userId) => async (dispatch) => {
 
     if (userData && userData.data.UserFindOne) {
         dispatch(actionAuthInfo(userData.data.UserFindOne));
-
-        //
-        //
-        //
-        //
-        //
-        //
-        //
     } else {
         console.log("UserFindOne - ошибка");
     }

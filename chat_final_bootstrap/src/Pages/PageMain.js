@@ -31,13 +31,6 @@ if (
     //
     //
     //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
     useEffect(() => {
         if (
             typeof getMesagesList === "function" &&

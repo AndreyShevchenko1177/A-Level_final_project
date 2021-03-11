@@ -56,10 +56,19 @@ function authReducer(state, action) {
 }
 
 function msgReduser(state = {}, action) {
+    // console.log("------------", action);
+
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {}; // кликнули по новому чату в sideBar
-    if (action.type === "ADDMSG") {
+
+    if (action.type === "NEW_CHAT") {
         return { ...state, ...action.msgs };
     }
+
+    if (action.type === "CHAT_INS_HEAD") {
+        let [key, value] = Object.entries(action.msgs)[0];
+        return { ...state, [key]: [...value, ...state[key]] };
+    }
+
     return state;
 }
 

@@ -2,7 +2,7 @@
 
 import { urlConst } from "../const";
 import { actionPromise } from "../Reducers";
-import { actionMsgAdd } from "../Actions";
+import { actionMsgNewChat, actionMsgInsertInHead } from "../Actions";
 
 const getGQL = (url) => (query, variables = {}) => {
     return fetch(url, {
@@ -28,14 +28,14 @@ const toQuery = (str, fields = ["title", "text"]) => {
     return { $or: arr };
 };
 
-export const actionSearchMessagesByChatId = (_chatId, skip = 0, limit = 10, str = "") => async (dispatch) => {
+export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", limit = 10) => async (dispatch) => {
     let searchObj;
-    str = toQuery(str);
+    searchStr = toQuery(searchStr);
 
     if (_chatId) {
         searchObj = { $and: [{ "chat._id": _chatId }] };
-        searchObj.$and.push(str);
-    } else searchObj = { str };
+        searchObj.$and.push(searchStr);
+    } else searchObj = { searchStr };
 
     let messages = await dispatch(
         actionPromise(
@@ -67,7 +67,11 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, limit = 10, str 
     // console.log("actionFindMessagesByChatId result: ", messages);
 
     if (messages && messages.data && messages.data.MessageFind && messages.data.MessageFind.length) {
-        dispatch(actionMsgAdd(messages.data.MessageFind.reverse()));
+        if (!skip) {
+            dispatch(actionMsgNewChat(messages.data.MessageFind.reverse()));
+        } else {
+            dispatch(actionMsgInsertInHead(messages.data.MessageFind.reverse()));
+        }
     }
 };
 

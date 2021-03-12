@@ -45,7 +45,7 @@ if (
     
 
     return (
-        <div className="PageMain container-fluid">
+        <div className="container-fluid">
             <div className="row g-3">
                 <div className="col-md-4">
                     <Sidebar />

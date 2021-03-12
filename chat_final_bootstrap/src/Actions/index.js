@@ -1,5 +1,11 @@
 import { actionAuthLogin, actionAuthLogout, actionLogin, actionRegistration, actionUserInfo } from "./ActionLogin";
-import { gql, actionSearchMessagesByChatId, actionGetMessagesByChatId, actionSearchChat } from "./ActionsGql";
+import {
+    gql,
+    actionSearchMessagesByChatId,
+    actionGetMessagesByChatId,
+    actionSearchChat,
+    actionGetAllUsers,
+} from "./ActionsGql";
 import { actionMsgNewChat, actionCurChatId, actionMsgInsertInHead } from "./ActionsMsg";
 
 export {
@@ -15,4 +21,5 @@ export {
     actionMsgNewChat,
     actionCurChatId,
     actionMsgInsertInHead,
+    actionGetAllUsers,
 };

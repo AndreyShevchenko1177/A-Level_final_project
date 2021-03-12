@@ -15,7 +15,7 @@ $position-values: (
 
 div {
     border-radius: 7px;
-    border: 1px solid red;
+    // border: 1px solid red;
 }
 
 ::-webkit-scrollbar {
@@ -56,6 +56,11 @@ body {
         width: 48px;
         height: 48px;
     }
+}
+
+.allUsersList {
+    max-height: calc(100vh - 180px);
+    overflow: auto;
 }
 
 .avatarka {

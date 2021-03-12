@@ -56,9 +56,7 @@ function authReducer(state, action) {
 }
 
 function msgReduser(state = {}, action) {
-    // console.log("------------", action);
-
-    if (["LOGOUT", "LOGIN"].includes(action.type)) return {}; // кликнули по новому чату в sideBar
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "NEW_CHAT") {
         return { ...state, ...action.msgs };
@@ -73,10 +71,21 @@ function msgReduser(state = {}, action) {
 }
 
 function currentChatIdReduser(state = {}, action) {
-    if (["LOGOUT", "LOGIN"].includes(action.type)) return {}; // кликнули по новому чату в sideBar
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
+
     if (action.type === "CURRENTID") {
         return { curChatId: action.curChatId };
     }
+
+    return state;
+}
+
+function allUsersReduser(state = [], action) {
+    if (["LOGOUT", "LOGIN", "CLEAR_USERS"].includes(action.type)) return [];
+    if (action.type === "NEW_USER_PART") {
+        return state.concat(action.userArr);
+    }
+
     return state;
 }
 
@@ -117,7 +126,13 @@ export const actionPromise = (name, promise) => {
 };
 
 export const store = createStore(
-    combineReducers({ auth: authReducer, promise: promiseReducer, msg: msgReduser, curChatId: currentChatIdReduser }),
+    combineReducers({
+        auth: authReducer,
+        promise: promiseReducer,
+        msg: msgReduser,
+        curChatId: currentChatIdReduser,
+        allUsers: allUsersReduser,
+    }),
     applyMiddleware(thunk)
 );
 

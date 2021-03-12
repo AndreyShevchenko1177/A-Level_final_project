@@ -3,6 +3,7 @@
 import { urlConst } from "../const";
 import { actionPromise } from "../Reducers";
 import { actionMsgNewChat, actionMsgInsertInHead } from "../Actions";
+import { store } from "../Reducers";
 
 const getGQL = (url) => (query, variables = {}) => {
     return fetch(url, {
@@ -19,7 +20,7 @@ const getGQL = (url) => (query, variables = {}) => {
 export const gql = getGQL(urlConst);
 
 const toQuery = (str, fields = ["title", "text"]) => {
-    str = str.replace(/ +/g, " ").trim();
+    str = str.replace(/ +/g, " ").trim(); // "/ +/g" - оставляет только по одному пробелу в последовательностях пробелов
     str = "/" + str.split(" ").join("|") + "/";
 
     let arr = fields.map((s) => {
@@ -134,4 +135,58 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
         )
     );
     console.log("actionSearchChat - searchData:", searchData);
+};
+
+export const actionUserFind = (skip = 0) => async (dispatch) => {
+    let users = await dispatch(
+        actionPromise(
+            "UserFind",
+            gql(
+                `query UserFind($query:String){
+                    UserFind(query:$query){
+                        _id
+                        login
+                        nick
+                        avatar{url}
+                    }
+                }`,
+                { query: JSON.stringify([{}, { sort: [{ _id: -1 }], skip: [skip], limit: [100] }]) }
+            )
+        )
+    );
+    // console.log("actionUserCount - userCount:", userCount);
+    if (!users.errors) {
+        users = users.data;
+        // console.log("actionUserFind - UserFind:", users);
+    }
+};
+
+export const actionUsersConcat = (userArr) => {
+    // console.log("actionUsersConcat - ", JSON.stringify(userArr, null, 4));
+    // console.log("actionUsersConcat - ", userArr);
+    return { type: "NEW_USER_PART", userArr };
+};
+
+export const actionGetAllUsers = () => async (dispatch) => {
+    let userCount = await dispatch(
+        actionPromise(
+            "userCount",
+            gql(
+                `query UsersCount{
+                    UserCount(query:"[{}]")
+                }`
+            )
+        )
+    );
+    // console.log("actionUserCount - userCount:", userCount.data.UserCount);
+    if (!userCount.errors) {
+        userCount = userCount.data.UserCount;
+        // console.log("actionUserCount - userCount:", userCount);
+
+        for (let i = 0; i < userCount; i += 100) {
+            // console.log("++++++++", i);
+            await actionUserFind(i)(dispatch);
+            dispatch(actionUsersConcat(store.getState().promise.UserFind.payload.data.UserFind));
+        }
+    }
 };

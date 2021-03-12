@@ -1,6 +1,6 @@
 import logo from "../images//logo23.jpg";
 import { connect } from "react-redux";
-import { urlConst } from "../const";
+import { urlUploadConst } from "../const";
 import { Link } from "react-router-dom";
 import { Counter } from "../Components";
 import personFillIcon from "../icons/person-fill.svg";
@@ -26,12 +26,9 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                     }
                 >
                     <div className="d-flex justify-content-start align-items-center">
-
-
-
                         <div className="avatarka ">
                             {avatar && avatar.url ? (
-                                <img src={`${urlConst}/${avatar.url}`}></img>
+                                <img src={`${urlUploadConst}/${avatar.url}`}></img>
                             ) : (
                                 <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
                                     <div className="fs-5 text-light fw-bolder">
@@ -46,8 +43,6 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                                 </div>
                             )}
                         </div>
-
-                        
 
                         <div className="text-dark fs-5 fw-bolder ms-2">{`${title}`}</div>
                     </div>

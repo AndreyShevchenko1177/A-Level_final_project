@@ -80,15 +80,6 @@ function currentChatIdReduser(state = {}, action) {
     return state;
 }
 
-function allUsersReduser(state = [], action) {
-    if (["LOGOUT", "LOGIN", "CLEAR_USERS"].includes(action.type)) return [];
-    if (action.type === "NEW_USER_PART") {
-        return state.concat(action.userArr);
-    }
-
-    return state;
-}
-
 function promiseReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
     if (action.type === "PROMISE") {
@@ -131,7 +122,6 @@ export const store = createStore(
         promise: promiseReducer,
         msg: msgReduser,
         curChatId: currentChatIdReduser,
-        allUsers: allUsersReduser,
     }),
     applyMiddleware(thunk)
 );

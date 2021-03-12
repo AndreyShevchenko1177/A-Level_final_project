@@ -19,7 +19,7 @@ const getGQL = (url) => (query, variables = {}) => {
 
 export const gql = getGQL(urlConst);
 
-const toQuery = (str, fields = ["title", "text"]) => {
+const toQuery = (str, fields = ["title", "text", "login", "nick", "_id"]) => {
     str = str.replace(/ +/g, " ").trim(); // "/ +/g" - оставляет только по одному пробелу в последовательностях пробелов
     str = "/" + str.split(" ").join("|") + "/";
 
@@ -32,6 +32,27 @@ const toQuery = (str, fields = ["title", "text"]) => {
 export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", limit = 10) => async (dispatch) => {
     let searchObj;
     searchStr = toQuery(searchStr);
+    // на самом деле searchStr - это теперь уже объект для поиска
+    // {
+    //     "$or": [
+    //         {
+    //             "title": "//"
+    //         },
+    //         {
+    //             "text": "//"
+    //         },
+    //         {
+    //             "login": "//"
+    //         },
+    //         {
+    //             "nick": "//"
+    //         },
+    //         {
+    //             "_id": "//"
+    //         }
+    //     ]
+    // }
+    // console.log(JSON.stringify(searchStr, null, 4));
 
     if (_chatId) {
         searchObj = { $and: [{ "chat._id": _chatId }] };
@@ -137,7 +158,7 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
     console.log("actionSearchChat - searchData:", searchData);
 };
 
-export const actionUserFind = (skip = 0) => async (dispatch) => {
+export const actionAllUsersFind = (skip = 0) => async (dispatch) => {
     let users = await dispatch(
         actionPromise(
             "UserFind",
@@ -154,7 +175,6 @@ export const actionUserFind = (skip = 0) => async (dispatch) => {
             )
         )
     );
-    // console.log("actionUserCount - userCount:", userCount);
     if (!users.errors) {
         users = users.data;
         // console.log("actionUserFind - UserFind:", users);
@@ -167,26 +187,27 @@ export const actionUsersConcat = (userArr) => {
     return { type: "NEW_USER_PART", userArr };
 };
 
-export const actionGetAllUsers = () => async (dispatch) => {
-    let userCount = await dispatch(
-        actionPromise(
-            "userCount",
-            gql(
-                `query UsersCount{
-                    UserCount(query:"[{}]")
-                }`
-            )
-        )
-    );
-    // console.log("actionUserCount - userCount:", userCount.data.UserCount);
-    if (!userCount.errors) {
-        userCount = userCount.data.UserCount;
-        // console.log("actionUserCount - userCount:", userCount);
+// это НИЗЗЯ!! это - затянуть всех пользователей сети к себе на Front!!
+// export const actionGetAllUsers = () => async (dispatch) => {
+//     let userCount = await dispatch(
+//         actionPromise(
+//             "userCount",
+//             gql(
+//                 `query UsersCount{
+//                     UserCount(query:"[{}]")
+//                 }`
+//             )
+//         )
+//     );
+//     // console.log("actionUserCount - userCount:", userCount.data.UserCount);
+//     if (!userCount.errors) {
+//         userCount = userCount.data.UserCount;
+//         // console.log("actionUserCount - userCount:", userCount);
 
-        for (let i = 0; i < userCount; i += 100) {
-            // console.log("++++++++", i);
-            await actionUserFind(i)(dispatch);
-            dispatch(actionUsersConcat(store.getState().promise.UserFind.payload.data.UserFind));
-        }
-    }
-};
+//         for (let i = 0; i < userCount; i += 100) {
+//             // console.log("++++++++", i);
+//             await actionAllUsersFind(i)(dispatch);
+//             dispatch(actionUsersConcat(store.getState().promise.UserFind.payload.data.UserFind));
+//         }
+//     }
+// };

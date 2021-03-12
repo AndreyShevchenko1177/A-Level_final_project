@@ -102,16 +102,29 @@ const UserItem = ({ _id, login, nick, avatar, myId }) => {
     );
 };
 
-const AllUsers = ({ allUsersArray = [], getAllUsers = null, myId }) => {
+const AllUsers = ({ searchUserResultArr = [], findUsers = null, myId, myChats = [] }) => {
     const [users, setUsers] = useState([]);
+    // console.log(myChats);
 
     useEffect(() => {
-        if (typeof getAllUsers === "function") getAllUsers();
+        if (typeof getAllUsers === "function") findUsers();
     }, []);
 
     useEffect(() => {
+        if (!searchUserResultArr.length) {
+            let tempObj = {};
+            for (let chat of myChats) {
+                for (let member of chat.members) {
+                    // console.log(members);
+                    let { _id, ...restData } = member;
+                    tempObj = { ...tempObj, [_id]: member };
+                }
+            }
+            // console.log("+++++++++++++++++++", tempObj);
+            searchUserResultArr = Object.values(tempObj);
+        }
         setUsers(
-            allUsersArray
+            searchUserResultArr
                 .filter((el) => {
                     if (!el.login) return false;
                     if (el.nick && !el.nick.replace(/ +/g, " ").trim()) {
@@ -123,8 +136,8 @@ const AllUsers = ({ allUsersArray = [], getAllUsers = null, myId }) => {
                 .sort((a, b) => ((a.nick || a.login) > (b.nick || b.login) ? 1 : -1))
         );
         // выкидываем пользователей, у которых (ник из одних пробелов) или (нет ника но логин из одних пробелов)
-        // console.log("+++++++++++++++++", users, allUsersArray);
-    }, [allUsersArray]);
+        // console.log("+++++++++++++++++", users, searchUserResultArr);
+    }, [searchUserResultArr]);
 
     return (
         <div className="bg-light">
@@ -136,8 +149,8 @@ const AllUsers = ({ allUsersArray = [], getAllUsers = null, myId }) => {
     );
 };
 
-const CAllUsers = connect((s) => ({ allUsersArray: s.allUsers, myId: s.auth.payloadId }), {
-    getAllUsers: actionGetAllUsers,
+const CAllUsers = connect((s) => ({ searchUserResultArr: [], myId: s.auth.payloadId, myChats: s.auth.chats }), {
+    findUsers: null,
 })(AllUsers);
 
 export const PageNewChat = () => {

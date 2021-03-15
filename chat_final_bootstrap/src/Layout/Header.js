@@ -3,7 +3,6 @@ import { CButtonLogout, CButtonUpload } from "../Components";
 import { CLoginInfo } from "../Components";
 import { connect } from "react-redux";
 import { Nav, Navbar } from "react-bootstrap";
-import { PersonFillIcon } from "../images/icons";
 import logo from "../images/logo23.png";
 
 const Logo = ({ link = "" }) => <img src={logo} width="50px" />;

@@ -16,7 +16,7 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
     // }, [searchStr]);
 
     return (
-        <div className="bg-light mb-2 text-nowrap">
+        <div className="bg-light  text-nowrap ">
             {/* <input
                 className="form-control mb-2 p-2 border border-success border-2"
                 placeholder="Search by title in my chats"
@@ -26,17 +26,17 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
             ></input> */}
             {/* <span>🔍</span> */}
             <Button
-                className="gradient"
-                variant="secondary btn-sm"
+                className="gradient ms-2 mb-2"
+                variant="success btn-sm"
                 onClick={() => {
                     history.push("/newchat");
                 }}
             >
                 New Chat
             </Button>
-            <Button className="gradient" variant="secondary btn-sm  ms-2">
+            {/* <Button className="gradient" variant="secondary btn-sm  m-2">
                 Join to another chat
-            </Button>
+            </Button> */}
         </div>
     );
 };

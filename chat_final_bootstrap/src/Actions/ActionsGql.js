@@ -135,7 +135,7 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
     if (_userId) {
         searchStr = { $and: [{ ___owner: _userId }] };
         searchStr.$and.push(str);
-    } else searchStr = { str };
+    } else searchStr = { ...str };
     // console.log("actionSearchChat-searchStr: ", searchStr);
 
     let searchData = await dispatch(
@@ -158,7 +158,9 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
     console.log("actionSearchChat - searchData:", searchData);
 };
 
-export const actionAllUsersFind = (skip = 0) => async (dispatch) => {
+export const actionAllUsersFind = (skip = 0, str = "") => async (dispatch) => {
+    str = toQuery(str);
+
     let users = await dispatch(
         actionPromise(
             "UserFind",
@@ -171,23 +173,25 @@ export const actionAllUsersFind = (skip = 0) => async (dispatch) => {
                         avatar{url}
                     }
                 }`,
-                { query: JSON.stringify([{}, { sort: [{ _id: -1 }], skip: [skip], limit: [100] }]) }
+                { query: JSON.stringify([str, { sort: [{ _id: -1 }], skip: [skip], limit: [100] }]) }
             )
         )
     );
+
     if (!users.errors) {
         users = users.data;
         // console.log("actionUserFind - UserFind:", users);
     }
 };
 
-export const actionUsersConcat = (userArr) => {
-    // console.log("actionUsersConcat - ", JSON.stringify(userArr, null, 4));
-    // console.log("actionUsersConcat - ", userArr);
-    return { type: "NEW_USER_PART", userArr };
-};
+// export const actionUsersConcat = (userArr) => {
+//     // console.log("actionUsersConcat - ", JSON.stringify(userArr, null, 4));
+//     // console.log("actionUsersConcat - ", userArr);
+//     return { type: "NEW_USER_PART", userArr };
+// };
 
 // это НИЗЗЯ!! это - затянуть всех пользователей сети к себе на Front!!
+
 // export const actionGetAllUsers = () => async (dispatch) => {
 //     let userCount = await dispatch(
 //         actionPromise(

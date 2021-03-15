@@ -69,6 +69,25 @@ function msgReduser(state = {}, action) {
 
     return state;
 }
+function newChatUsersReduser(state = {}, action) {
+    // console.log(action);
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
+
+    if (action.type === "ADD_USER_TO_CHAT_LIST") {
+        return { ...state, ...action.user };
+    }
+
+    if (action.type === "DELETE_USER_FROM_CHAT_LIST") {
+        delete state[action._id];
+        return state;
+    }
+
+    if (action.type === "NEW_CHAT_LIST") {
+        return { ...state, ...action.user };
+    }
+
+    return state;
+}
 
 function currentChatIdReduser(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
@@ -122,6 +141,7 @@ export const store = createStore(
         promise: promiseReducer,
         msg: msgReduser,
         curChatId: currentChatIdReduser,
+        newChatUsers: newChatUsersReduser,
     }),
     applyMiddleware(thunk)
 );

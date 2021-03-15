@@ -53,6 +53,10 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             placeholder="Login"
                             className="input"
                             ref={login_ref}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter" && typeof onRegistration === "function")
+                                    onRegistration(login, pass, nick);
+                            }}
                             onChange={(e) => {
                                 setLogin(e.target.value);
                             }}
@@ -63,6 +67,10 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             placeholder="Nick"
                             className="input"
                             ref={nick_ref}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter" && typeof onRegistration === "function")
+                                    onRegistration(login, pass, nick);
+                            }}
                             onChange={(e) => {
                                 setNick(e.target.value);
                             }}
@@ -73,6 +81,10 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             placeholder="Password"
                             className="input"
                             ref={pass_ref}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter" && typeof onRegistration === "function")
+                                    onRegistration(login, pass, nick);
+                            }}
                             onChange={(e) => {
                                 setPass(e.target.value);
                             }}
@@ -80,7 +92,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                         <button
                             className="btn_view"
                             onClick={() => {
-                                onRegistration(login, pass, nick);
+                                if (typeof onRegistration === "function") onRegistration(login, pass, nick);
                                 // console.log("кнопка регистрации нажата");
                             }}
                             disabled={isLoggedIn || !login || !pass || !nick}
@@ -100,6 +112,9 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             placeholder="Login"
                             className="input"
                             ref={login2_ref}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter" && typeof onLogin === "function") onLogin(login, pass, nick);
+                            }}
                             onChange={(e) => {
                                 setLogin(e.target.value);
                             }}
@@ -110,6 +125,9 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                             placeholder="Password"
                             className="input"
                             ref={pass2_ref}
+                            onKeyUp={(e) => {
+                                if (e.key === "Enter" && typeof onLogin === "function") onLogin(login, pass, nick);
+                            }}
                             onChange={(e) => {
                                 setPass(e.target.value);
                             }}
@@ -119,7 +137,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
                         <button
                             className="btn_view"
                             onClick={() => {
-                                onLogin(login, pass, nick);
+                                if (typeof onLogin === "function") onLogin(login, pass, nick);
                                 // console.log("кнопка логин нажата");
                             }}
                             disabled={isLoggedIn || !login || !pass}

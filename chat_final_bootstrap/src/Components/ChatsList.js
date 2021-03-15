@@ -61,6 +61,7 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
     // console.log(arrayOfChats);
     // arrayOfChats - массив всех чатов пользователя
     if (!arrayOfChats) return <></>;
+    // console.log("+++++++++++ ", arrayOfChats);
 
     // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
     // чаты без сообщений отправляются в конец списка
@@ -78,6 +79,8 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
     // сортировка вариант2:
     // за последнюю дату чата принимается дата последнего сообщения либо если нет сообщений,
     // то дата создания чата
+
+    //FIXME:
     arrayOfChats.sort((a, b) => {
         a = a.messages && a.messages.length ? a.messages[a.messages.length - 1].createdAt : a.createdAt;
         b = b.messages && b.messages.length ? b.messages[b.messages.length - 1].createdAt : b.createdAt;

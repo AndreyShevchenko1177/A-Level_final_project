@@ -19,14 +19,14 @@ const PageMain = ({
     // console.log(_chatId);
     // console.log(messages);
 
-if (
-    !_userId ||
-    !store.getState().auth ||
-    !store.getState().auth.login ||
-    _userId !== store.getState().auth.payloadId
-) {
-    history.push("/");
-}
+    if (
+        !_userId ||
+        !store.getState().auth ||
+        !store.getState().auth.login ||
+        _userId !== store.getState().auth.payloadId
+    ) {
+        history.push("/");
+    }
     //
     //
     //

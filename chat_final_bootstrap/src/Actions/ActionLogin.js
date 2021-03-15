@@ -63,8 +63,7 @@ export const actionLogin = (login, password) => async (dispatch) => {
             )
         )
     );
-
-    // console.log("loginData", loginData);
+    console.log("loginData", loginData);
 
     if (loginData && loginData.data.login) {
         dispatch(actionAuthLogin(loginData.data.login));
@@ -72,7 +71,14 @@ export const actionLogin = (login, password) => async (dispatch) => {
 
         history.push(`/main`);
     } else {
-        alert("Авторизация не прошла. Проверьте логин и пароль.");
+        alert(
+            `Авторизация не прошла. ${
+                (store.getState().promise.login &&
+                    store.getState().promise.login.error &&
+                    store.getState().promise.login.error.message) ||
+                "Проблемы с сетью/сервером"
+            }`
+        );
     }
 };
 
@@ -100,6 +106,13 @@ export const actionRegistration = (login, password, nick) => async (dispatch) =>
     if (regData && regData.data && regData.data.UserUpsert && regData.data.UserUpsert.login) {
         await actionLogin(login, password)(dispatch);
     } else {
-        alert(`Ошибка регистрации: ${regData.errors && regData.errors[0].message}`);
+        alert(
+            `Ошибка регистрации: ${
+                (store.getState().promise.registration &&
+                    store.getState().promise.registration.error &&
+                    store.getState().promise.registration.error.message) ||
+                "Проблемы с сетью/сервером"
+            }`
+        );
     }
 };

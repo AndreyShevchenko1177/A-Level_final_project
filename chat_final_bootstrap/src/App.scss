@@ -23,6 +23,10 @@ div {
     background-color: #d1e7dd;
 }
 
+// ul :nth-child(odd) {
+//     color: red;
+// }
+
 ::-webkit-scrollbar-track {
     box-shadow: 5px 5px 5px -5px rgba(11, 61, 6, 0.2) inset;
     -webkit-box-shadow: 5px 5px 5px -5px rgba(11, 61, 6, 0.2) inset;
@@ -48,18 +52,8 @@ body {
     min-width: 250px;
 }
 
-.ChatsList {
-    max-height: calc(100vh - 220px);
-    overflow: auto;
-
-    img {
-        width: 48px;
-        height: 48px;
-    }
-}
-
 .allUsersList {
-    max-height: calc(100vh - 220px);
+    max-height: calc(100vh - 300px);
     overflow: auto;
 }
 
@@ -107,6 +101,26 @@ body {
 
 .noUnderLine {
     text-decoration: none;
+}
+
+.ChatsList {
+    max-height: calc(100vh - 220px);
+    overflow: auto;
+
+    img {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.ChatDashBoard {
+    min-height: calc(100vh - 110px);
+    padding: 20px;
+    table td:first-child {
+        white-space: nowrap;
+        text-align: end;
+        padding-right: 10px;
+    }
 }
 
 @import "/node_modules/bootstrap/scss/bootstrap";

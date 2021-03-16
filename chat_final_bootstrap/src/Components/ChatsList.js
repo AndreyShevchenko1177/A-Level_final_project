@@ -21,8 +21,8 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                 <li
                     className={
                         _id === currentChatId
-                            ? "list-group-item list-group-item-success m-1 gradient shadow border-2"
-                            : "list-group-item list-group-item-light m-1 gradient shadow-sm border-2"
+                            ? "list-group-item list-group-item-success m-1 gradient shadow border-2 rounded-pill"
+                            : "list-group-item list-group-item-light m-1 gradient shadow-sm border-2 rounded-3"
                     }
                 >
                     <div className="d-flex justify-content-start align-items-center">

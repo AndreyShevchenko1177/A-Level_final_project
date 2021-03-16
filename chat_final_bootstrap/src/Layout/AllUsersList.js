@@ -47,6 +47,8 @@ const AllUsersConst = [
 
 const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUserFromList = null, newChatUsers }) => {
     const avatarUrl = avatar && avatar.url;
+
+    // если нет ника, то берем логин
     nick = !!nick ? nick : login;
 
     const doSelectUser = () => {
@@ -67,8 +69,8 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
         <>
             <li
                 className={`list-group-item list-group-item-${
-                    _id in newChatUsers || _id === myId ? "success" : "light"
-                } m-1 gradient shadow-sm border-2 `}
+                    _id in newChatUsers || _id === myId ? "success rounded-pill shadow" : "light rounded-3 shadow-sm"
+                } m-1 gradient border-2 `}
                 onClick={doSelectUser}
             >
                 <div className="d-flex justify-content-start align-items-center">
@@ -101,7 +103,7 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
                 </div>
                 <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                     {_id}
-                    <span className="visually-hidden">всего сообщений</span>
+                    <span className="visually-hidden">_id пользователя</span>
                 </span>
             </li>
         </>
@@ -138,6 +140,9 @@ const AllUsersList = ({
 
     // если из базы ничего еще не пришло по поиску пользователей,
     // то посмотрим на всех, с кeм мы вообще уже общались в чатах
+
+    // эта проверка нужна, так как если моих чатов нет, то из базы приходит null
+    if (!myChats) myChats = [];
 
     if (!searchUserStr || !searchUserResultArr) {
         let tempObj = {};

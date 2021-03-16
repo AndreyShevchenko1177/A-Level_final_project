@@ -32,7 +32,7 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
                     history.push("/newchat");
                 }}
             >
-                <i class="bi bi-chat-left-text"></i> New Chat
+                <i className="bi bi-chat-left-text"></i> New Chat
             </Button>
             {/* <Button className="gradient" variant="secondary btn-sm  m-2">
                 Join to another chat

@@ -56,11 +56,13 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
     }, [members]);
 
     const doCreateNewChat = () => {
-        createNewChat({
-            title: inpTitle,
-            members: chatMembers,
-            avaFile: uploadRef.current && uploadRef.current.files && uploadRef.current.files[0],
-        });
+        if (typeof createNewChat === "function") {
+            createNewChat({
+                title: inpTitle,
+                members: chatMembers,
+                avaFile: uploadRef.current && uploadRef.current.files && uploadRef.current.files[0],
+            });
+        }
     };
 
     function previewFile() {
@@ -83,7 +85,7 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
     return (
         <>
             <div className="ChatDashBoard bg-light">
-                <h4>ChatDashBoard</h4>
+                <h5>New Chat:</h5>
                 <table className="table table-bordered align-middle">
                     <tbody>
                         <tr>
@@ -138,18 +140,6 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
                                     className="form-control form-control-sm m-2"
                                     aria-label="file example"
                                 />
-                                {/* <br />
-                                <img src={srcAva} height="200" alt="Image preview..." ref={uploadImgRef}></img> */}
-
-                                {/*  */}
-
-                                {/* <span className="avatarka">
-                                    <img
-                                        src={chat_square_text}
-                                        className="border border-2 border-success bg-light "
-                                        alt="Avatar"
-                                    />
-                                </span> */}
                             </td>
                         </tr>
                         <tr>

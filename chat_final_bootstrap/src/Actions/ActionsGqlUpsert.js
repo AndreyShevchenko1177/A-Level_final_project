@@ -2,10 +2,11 @@
 //
 import { urlUploadConst } from "../const";
 import { actionPromise } from "../Reducers";
-import { gql, actionSearchMessagesByChatId } from "../Actions";
+import { gql, actionSearchMessagesByChatId, actionUserInfo } from "../Actions";
+import history from "../history";
 
 export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
-    console.log("actionMessageUpsert --- ", text, chatId);
+    // console.log("actionMessageUpsert --- ", text, chatId);
 
     let msgData = await dispatch(
         actionPromise(
@@ -21,10 +22,9 @@ export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
         )
     );
 
-    console.log("MessageUpsert - ", msgData);
+    // console.log("MessageUpsert - ", msgData);
 
     if (msgData && msgData.data && msgData.data.MessageUpsert && msgData.data.MessageUpsert._id) {
-        console.log("MessageUpsert - ", msgData);
         dispatch(actionSearchMessagesByChatId(chatId));
     }
 };
@@ -71,21 +71,24 @@ export const actionCreateNewChat = ({ title, members, avaFile }) => async (dispa
         )
     );
 
-    if (avaFile) {
-        let dataSingl = new FormData();
-        dataSingl.set("media", avaFile);
-        let avaUploadResult = await fetch(`${urlUploadConst}/upload`, {
-            method: "POST",
-            headers: localStorage.authToken ? { Authorization: "Bearer " + localStorage.authToken } : {},
-            body: dataSingl,
-        }).then((res) => res.json());
+    // console.log("898989898 ---- ", chatData);
 
-        dispatch(actionMediaUpsert({ chatId: chatData.data.ChatUpsert._id, mediaId: avaUploadResult._id }));
+    if (chatData && chatData.data && chatData.data.ChatUpsert && chatData.data.ChatUpsert._id) {
+        if (avaFile) {
+            let dataSingl = new FormData();
+            dataSingl.set("media", avaFile);
+            let avaUploadResult = await fetch(`${urlUploadConst}/upload`, {
+                method: "POST",
+                headers: localStorage.authToken ? { Authorization: "Bearer " + localStorage.authToken } : {},
+                body: dataSingl,
+            }).then((res) => res.json());
+
+            dispatch(actionMediaUpsert({ chatId: chatData.data.ChatUpsert._id, mediaId: avaUploadResult._id }));
+        }
+
+        // обновить списки моих чатов
+        await dispatch(actionUserInfo(members[0]._id));
+
+        history.push(`/main/${chatData.data.ChatUpsert._id}`);
     }
-
-    // if (userData && userData.data.UserFindOne) {
-    //     dispatch(actionAuthInfo(userData.data.UserFindOne));
-    // } else {
-    //     console.log("UserFindOne - ошибка");
-    // }
 };

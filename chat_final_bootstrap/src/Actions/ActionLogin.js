@@ -17,6 +17,7 @@ export const actionAuthInfo = ({ login, nick, _id, avatar, chats = [] }) => {
     return { type: "INFO", userInfo: { login, nick, _id, url, chats } };
 };
 
+// получить дополнительную более полную инфу о пользователе
 export const actionUserInfo = (userId) => async (dispatch) => {
     // console.log("actionUserInfo - ########### ", userId);
     let userData = await dispatch(

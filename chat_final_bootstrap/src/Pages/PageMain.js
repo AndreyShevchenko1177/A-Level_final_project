@@ -16,9 +16,9 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
         // console.log(e);
     };
 
-    // отправка по Ctrl+Enter но не по Enter
+    // отправка по Enter
     const sendMsgByEnterKey = (e) => {
-        if (["NumpadEnter", "Enter"].includes(e.code) && e.ctrlKey && text.trim()) {
+        if (["NumpadEnter", "Enter"].includes(e.code) && text.trim()) {
             sendMsg();
         }
     };
@@ -51,7 +51,7 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
                             role-button="true"
                             onClick={sendMsg}
                         >
-                            <i class="bi bi-chat-dots"></i> <i class="bi bi-reply-fill"></i>
+                            <i className="bi bi-chat-dots"></i> <i className="bi bi-reply-fill"></i>
                         </span>
                     </div>
                 </div>

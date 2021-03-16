@@ -2,7 +2,7 @@
 //
 import { urlUploadConst } from "../const";
 import { actionPromise } from "../Reducers";
-import { gql } from "../Actions";
+import { gql, actionSearchMessagesByChatId } from "../Actions";
 
 export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
     console.log("actionMessageUpsert --- ", text, chatId);
@@ -25,6 +25,7 @@ export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
 
     if (msgData && msgData.data && msgData.data.MessageUpsert && msgData.data.MessageUpsert._id) {
         console.log("MessageUpsert - ", msgData);
+        dispatch(actionSearchMessagesByChatId(chatId));
     }
 };
 

@@ -145,7 +145,9 @@ const CMessagesList = connect(
     { getMoreMessages: actionSearchMessagesByChatId }
 )(MessagesList);
 
-const Messages = ({ _id = "", messages, getMsg }) => {
+const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
+    if (chatInfo) chatInfo = chatInfo.filter((chat) => chat._id === _id);
+
     // id чата,
 
     // console.log("Messages - id - ", _id);
@@ -154,8 +156,8 @@ const Messages = ({ _id = "", messages, getMsg }) => {
     //     !(messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat._id)
     // );
 
-    let avatar = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.avatar;
-    let title = messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat.title;
+    let avatar = chatInfo && chatInfo[0] && chatInfo[0].avatar && chatInfo[0].avatar.url;
+    let title = chatInfo && chatInfo[0] && chatInfo[0].title;
 
     useEffect(() => {
         if (
@@ -168,34 +170,39 @@ const Messages = ({ _id = "", messages, getMsg }) => {
     }, [_id]);
 
     return (
-        <div>
-            <div className="position-relative  mb-3 border-bottom border-2 border-success ">
-                <div className="d-flex justify-content-start align-items-center">
-                    <div className="avatarka">
-                        {avatar && avatar.url ? (
-                            <img src={`${urlUploadConst}/${avatar.url}`}></img>
-                        ) : (
-                            <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
-                                <div className="fs-5 text-light fw-bolder">
-                                    {title &&
-                                        `${title.split(" ")[0][0].toUpperCase()}` +
-                                            `${
-                                                (title.split(" ").slice(1).pop() &&
-                                                    title.split(" ").slice(1).pop()[0].toUpperCase()) ||
-                                                ""
-                                            }`}
+        <div className="mb-2">
+            {chatInfo && chatInfo[0] && (
+                <div className="position-relative  mb-3 border-bottom border-2 border-success ">
+                    <div className="d-flex justify-content-start align-items-center">
+                        <div className="avatarka">
+                            {avatar ? (
+                                <img
+                                    src={`${urlUploadConst}/${avatar}`}
+                                    className=" border border-2 border-success"
+                                ></img>
+                            ) : (
+                                <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
+                                    <div className="fs-5 text-light fw-bolder">
+                                        {title &&
+                                            `${title.split(" ")[0][0].toUpperCase()}` +
+                                                `${
+                                                    (title.split(" ").slice(1).pop() &&
+                                                        title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                                    ""
+                                                }`}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
+
+                        <div className="fs-4 fw-bolder ms-2">{`${title}`}</div>
                     </div>
 
-                    <div className="fs-4 fw-bolder ms-2">{`${title}`}</div>
+                    <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
+                        {` _chatId: ${_id}`} <span className="visually-hidden">id чата</span>
+                    </span>
                 </div>
-
-                <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
-                    {` _chatId: ${_id}`} <span className="visually-hidden">id чата</span>
-                </span>
-            </div>
+            )}
             <div>
                 <CMessagesList />
             </div>
@@ -203,9 +210,9 @@ const Messages = ({ _id = "", messages, getMsg }) => {
     );
 };
 
-const CMessages = connect((s) => ({ _id: s.curChatId.curChatId, messages: s.msg }), {
+const CMessages = connect((s) => ({ _id: s.curChatId.curChatId, messages: s.msg, chatInfo: s.auth.chats }), {
     getMsg: actionGetMessagesByChatId,
 })(Messages);
 // - id chata
 
-export const ChatContain = ({ _chatId = "" }) => <div>{!!_chatId && <CMessages />}</div>;
+export const ChatMessages = ({ _chatId = "" }) => <div>{!!_chatId && <CMessages />}</div>;

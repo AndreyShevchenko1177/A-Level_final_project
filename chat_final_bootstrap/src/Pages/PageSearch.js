@@ -1,4 +1,4 @@
-import { ChatContain } from "../Components";
+import { ChatMessages } from "../Components";
 import { Sidebar } from "../Layout";
 import { store } from "../Reducers";
 import history from "../history";
@@ -51,7 +51,7 @@ const PageMain = ({
                     <Sidebar />
                 </div>
                 <div className="col-md-8">
-                    <ChatContain _chatId={_chatId} />
+                    <ChatMessages _chatId={_chatId} />
                 </div>
             </div>
         </div>

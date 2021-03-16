@@ -1,6 +1,6 @@
-import { ButtonToMain } from "../Components";
+import { ButtonToMain, CNewChatDashBoard } from "../Components";
 import { urlUploadConst } from "../const";
-import { actionGetAllUsers, actionAllUsersFind } from "../Actions";
+import { actionGetAllUsers, actionAllUsersFind, actionDelUserFromChatList } from "../Actions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -9,58 +9,10 @@ import { useRef } from "react";
 import history from "../history";
 import { CUserInfo } from "../Layout";
 import { CAllUsersList } from "../Layout";
+import { useDropzone } from "react-dropzone";
 import logo from "../images/logo23.png";
 import chat_square_text from "../icons/chat-square-text.svg";
-
-const MemberItem = ({ member }) => <pre>{member.login}</pre>;
-
-const ChatDashBoard = ({ members = {} }) => {
-    const [chatMembers, setChatMembers] = useState(Object.values(members));
-    useEffect(() => setChatMembers(Object.values(members)), [members]);
-
-    return (
-        <>
-            <div className="ChatDashBoard bg-light">
-                <h4>ChatDashBoard</h4>
-                <table className="table table-bordered">
-                    <tbody>
-                        <tr>
-                            <td>Chat title:</td>
-                            <td>
-                                <input
-                                    className="form-control mb-2 p-2 border border-success border-2"
-                                    placeholder="Input title for new chat"
-                                ></input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Chat avatar:</td>
-                            <td>
-                                <span className="avatarka">
-                                    <img
-                                        src={chat_square_text}
-                                        className="border border-2 border-success bg-light "
-                                        alt="Avatar"
-                                    />
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Chat members:</td>
-                            <td>
-                                {chatMembers.map((member) => (
-                                    <MemberItem key={member._id} member={member} />
-                                ))}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </>
-    );
-};
-
-const CChatDashBoard = connect((s) => ({ members: s.newChatUsers }))(ChatDashBoard);
+import userEvent from "@testing-library/user-event";
 
 const PageNewChat = ({ doSearchUsers = null }) => {
     const [searchUserStr, setSearchUserStr] = useState("");
@@ -70,6 +22,7 @@ const PageNewChat = ({ doSearchUsers = null }) => {
         history.push("/");
     }
 
+    // если ввели поиск пользователей - будем искать
     useEffect(() => {
         if (searchUserStr && typeof doSearchUsers === "function") {
             doSearchUsers(0, searchUserStr);
@@ -83,9 +36,9 @@ const PageNewChat = ({ doSearchUsers = null }) => {
 
     return (
         <>
-            <div className="PageMain container-fluid">
+            <div className="container-fluid">
                 <div className="row g-3">
-                    <div className="col-md-4  bg-light">
+                    <div className="col-md-4  bg-light gradient shadow-sm border-2 rounded-3">
                         <CUserInfo />
                         <ButtonToMain />
 
@@ -100,7 +53,7 @@ const PageNewChat = ({ doSearchUsers = null }) => {
                         <CAllUsersList searchUserStr={searchUserStr} />
                     </div>
                     <div className="col-md-8">
-                        <CChatDashBoard />
+                        <CNewChatDashBoard />
                     </div>
                 </div>
             </div>

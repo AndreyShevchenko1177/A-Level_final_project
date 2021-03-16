@@ -65,22 +65,33 @@ body {
         height: 48px;
     }
 }
-
+//
+//
+//
+//
+//
+//
+//
+.pageMain_ChatMessages {
+    max-height: calc(100vh - 250px);
+    min-height: calc(100vh - 250px);
+}
 .MessagesList {
-    max-height: calc(100vh - 350px);
+    max-height: calc(100vh - 330px);
+    min-height: calc(100vh - 330px);
+    // height: auto;
     overflow: auto;
+}
+
+.MessageInput {
+    max-height: 135px;
+    min-height: 135px;
+    background-color: darkslategray;
 }
 
 .fonRomaska {
     background: url("./images/romashki_1920x1080.jpg");
 }
-
-// .Messages {
-
-//     input {
-//         width: 70%;
-//     }
-// }
 
 .messageItem {
     // width: 75%;
@@ -111,6 +122,11 @@ body {
         width: 48px;
         height: 48px;
     }
+}
+
+.messagesArea {
+    max-height: calc(100vh - 20px);
+    background-color: red;
 }
 
 .ChatDashBoard {

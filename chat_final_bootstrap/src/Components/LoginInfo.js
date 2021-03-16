@@ -5,20 +5,20 @@ import { actionUserInfo } from "../Actions";
 
 const LoginInfo = ({ login, nick, _id, getUserInfo }) => {
     useEffect(() => {
-        getUserInfo(_id);
-    }, [_id]);
-
-    if (!nick) {
-        nick = login;
-    }
+        // здесь нужен именно undefined, так как из базы может прийти null или ""
+        // undefined - значит еще не было инфы из базы
+        if (nick === undefined) {
+            getUserInfo(_id);
+        }
+    }, []);
 
     return (
         <span className="mx-2 text-white ">
             {login ? (
                 <span className="text-nowrap">
-                    <span className="text-nowrap"> {`${login}`} </span>
+                    <span className="text-nowrap"> {`${nick ? nick : login}`} </span>
                     {/* {" / "}
-                    <span className="text-nowrap">{`Nick: ${nick}`}</span>
+                    <span className="text-nowrap">{`Login: ${login}`}</span>
                     <br />
                     <span className="text-nowrap">{`_id: ${_id}`}</span> */}
                 </span>

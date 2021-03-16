@@ -28,15 +28,18 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                     <div className="d-flex justify-content-start align-items-center">
                         <div className="avatarka ">
                             {avatar && avatar.url ? (
-                                <img src={`${urlUploadConst}/${avatar.url}`}></img>
+                                <img
+                                    src={`${urlUploadConst}/${avatar.url}`}
+                                    className=" border border-2 border-success"
+                                ></img>
                             ) : (
                                 <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
                                     <div className="fs-5 text-light fw-bolder">
                                         {title &&
-                                            `${title.split(" ")[0][0].toUpperCase()}` +
+                                            `${title.trim().split(" ")[0][0].toUpperCase()}` +
                                                 `${
-                                                    (title.split(" ").slice(1).pop() &&
-                                                        title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                                    (title.trim().split(" ").slice(1).pop() &&
+                                                        title.trim().split(" ").slice(1).pop()[0].toUpperCase()) ||
                                                     ""
                                                 }`}
                                     </div>

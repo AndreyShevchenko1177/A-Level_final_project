@@ -4,7 +4,7 @@ import { Button } from "react-bootstrap";
 
 const ButtonLogout = ({ onLogout, isLoggedIn }) => (
     <Button className="gradient" variant="secondary btn-sm" onClick={onLogout} disabled={!isLoggedIn}>
-        Logout
+        <i class="bi bi-door-open"></i> Logout
     </Button>
 );
 export const CButtonLogout = connect((s) => ({ isLoggedIn: s.auth.login }), { onLogout: actionAuthLogout })(

@@ -79,11 +79,11 @@ function newChatUsersReduser(state = {}, action) {
 
     if (action.type === "DELETE_USER_FROM_CHAT_LIST") {
         delete state[action._id];
-        return state;
+        return { ...state };
     }
 
     if (action.type === "NEW_CHAT_LIST") {
-        return { ...state, ...action.user };
+        return { ...action.user };
     }
 
     return state;

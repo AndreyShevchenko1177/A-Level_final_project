@@ -45,14 +45,13 @@ const AllUsersConst = [
     },
 ];
 
-const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUserFromList = null }) => {
-    const [isSelected, setIsSelected] = useState(false);
+const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUserFromList = null, newChatUsers }) => {
     const avatarUrl = avatar && avatar.url;
     nick = !!nick ? nick : login;
 
     const doSelectUser = () => {
         if (_id !== myId) {
-            if (isSelected) {
+            if (_id in newChatUsers) {
                 if (typeof addUserToList === "function") {
                     delUserFromList(_id);
                 }
@@ -61,7 +60,6 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
                     addUserToList({ _id, login, nick, avatar });
                 }
             }
-            setIsSelected((prev) => !prev);
         }
     };
 
@@ -69,7 +67,7 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
         <>
             <li
                 className={`list-group-item list-group-item-${
-                    isSelected || _id === myId ? "success" : "light"
+                    _id in newChatUsers || _id === myId ? "success" : "light"
                 } m-1 gradient shadow-sm border-2 `}
                 onClick={doSelectUser}
             >
@@ -110,12 +108,15 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
     );
 };
 
-const CUserItem = connect(null, { delUserFromList: actionDelUserFromChatList, addUserToList: actionAddUserToChatList })(
-    UserItem
-);
+const CUserItem = connect(
+    (s) => ({
+        newChatUsers: s.newChatUsers,
+    }),
+    { delUserFromList: actionDelUserFromChatList, addUserToList: actionAddUserToChatList }
+)(UserItem);
 
 const AllUsersList = ({
-    searchUserResultArr = [],
+    searchUserResultArr,
     myId,
     myLogin,
     myNick,
@@ -127,6 +128,7 @@ const AllUsersList = ({
     //  FIXME: следующая строка - для отладки без инета
     // searchUserResultArr = AllUsersConst;
 
+    // создаем новый список пользователей нового чата со мной во главе
     useEffect(() => {
         if (typeof createNewChatList === "function")
             createNewChatList({ _id: myId, login: myLogin, nick: myNick, avatar: { url: myAvatarUrl } });
@@ -137,7 +139,7 @@ const AllUsersList = ({
     // если из базы ничего еще не пришло по поиску пользователей,
     // то посмотрим на всех, с кeм мы вообще уже общались в чатах
 
-    if (!searchUserStr || !searchUserResultArr || !searchUserResultArr.length) {
+    if (!searchUserStr || !searchUserResultArr) {
         let tempObj = {};
         for (let chat of myChats) {
             for (let member of chat.members) {

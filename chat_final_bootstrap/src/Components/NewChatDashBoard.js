@@ -1,6 +1,6 @@
 import { ButtonToMain } from "../Components";
 import { urlUploadConst } from "../const";
-import { actionDelUserFromChatList, actionCreateNewChat } from "../Actions";
+import { actionDelUserFromChatList, actionCreateNewChat, actionAddUserToChatList } from "../Actions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -42,22 +42,41 @@ const CMemberItem = connect(
     { dellFromList: actionDelUserFromChatList }
 )(MemberItem);
 
-const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
+const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = [], addUserToList }) => {
     const [chatMembers, setChatMembers] = useState(Object.values(members));
     const [inpTitle, setInpTitle] = useState("");
-    const uploadRef = useRef(null);
-    const uploadImgRef = useRef(null);
+    const uploadRef = useRef(null); // ссылка на input type=file для авы
+    const inputTiylegRef = useRef(null);
     const [srcAva, setSrcAva] = useState("");
 
-    // console.log(members);
+    // достаем из redux даные о чате, который хотим редактировать
+    useEffect(() => {
+        if (_chatId) {
+            let chatInfo = {};
+
+            myChats = myChats.filter((chat) => chat._id === _chatId); // оставляем в myChats только редактируемый
+            chatInfo = myChats && myChats[0];
+
+            if (chatInfo && Object.keys(chatInfo).length) {
+                inputTiylegRef.current.value = chatInfo.title;
+                setInpTitle(chatInfo.title);
+                chatInfo.members.forEach((mem) => {
+                    if (typeof addUserToList === "function") {
+                        addUserToList(mem);
+                    }
+                });
+            }
+        }
+    }, [myChats]);
 
     useEffect(() => {
         setChatMembers(Object.values(members));
     }, [members]);
 
     const doCreateNewChat = () => {
-        if (typeof createNewChat === "function") {
-            createNewChat({
+        if (typeof chatUpsert === "function") {
+            chatUpsert({
+                _id: _chatId,
                 title: inpTitle,
                 members: chatMembers,
                 avaFile: uploadRef.current && uploadRef.current.files && uploadRef.current.files[0],
@@ -66,7 +85,6 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
     };
 
     function previewFile() {
-        let preview = uploadImgRef.current;
         let file = uploadRef.current && uploadRef.current.files && uploadRef.current.files[0];
         let reader = new FileReader();
 
@@ -85,7 +103,7 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
     return (
         <>
             <div className="ChatDashBoard bg-light">
-                <h5>New Chat:</h5>
+                <h5>{_chatId ? "Update chat:" : "New Chat:"}</h5>
                 <table className="table table-bordered align-middle">
                     <tbody>
                         <tr>
@@ -95,6 +113,7 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
                                     className="form-control mb-2 p-2 border border-success border-2"
                                     placeholder="Input title for new chat"
                                     onChange={(e) => setInpTitle(e.target.value)}
+                                    ref={inputTiylegRef}
                                 ></input>
                             </td>
                         </tr>
@@ -153,7 +172,13 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
                     </tbody>
                 </table>
                 <button className="btn-success gradient rounded" disabled={!inpTitle} onClick={doCreateNewChat}>
-                    Create new chat
+                    {_chatId ? "Update chat" : "Create new chat"}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
+                    {/*  */}
                 </button>
                 {!inpTitle && <span className="text-danger"> You should fill in the 'Chat title' field.</span>}
             </div>
@@ -161,6 +186,10 @@ const NewChatDashBoard = ({ members = {}, createNewChat = null }) => {
     );
 };
 
-export const CNewChatDashBoard = connect((s) => ({ members: s.newChatUsers }), { createNewChat: actionCreateNewChat })(
-    NewChatDashBoard
-);
+export const CNewChatDashBoard = connect(
+    (s, { _chatId }) => ({ myChats: s.auth.chats, members: s.newChatUsers, _chatId }),
+    {
+        chatUpsert: actionCreateNewChat,
+        addUserToList: actionAddUserToChatList,
+    }
+)(NewChatDashBoard);

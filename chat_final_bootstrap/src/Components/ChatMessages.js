@@ -170,34 +170,35 @@ const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
     }, [_id]);
 
     return (
+        // шапка - Лого чата, title...
         <div className="mb-2">
             {chatInfo && chatInfo[0] && (
-                <div className="position-relative  mb-3 border-bottom border-2 border-success ">
+                <div className="position-relative  mb-3 border-bottom border-2 border-success text-dark">
                     <div className="d-flex justify-content-start align-items-center">
-                        <div className="avatarka">
-                            {avatar ? (
-                                <img
-                                    src={`${urlUploadConst}/${avatar}`}
-                                    className=" border border-2 border-success"
-                                ></img>
-                            ) : (
-                                <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
-                                    <div className="fs-5 text-light fw-bolder">
-                                        {title &&
-                                            `${title.split(" ")[0][0].toUpperCase()}` +
-                                                `${
-                                                    (title.split(" ").slice(1).pop() &&
-                                                        title.split(" ").slice(1).pop()[0].toUpperCase()) ||
-                                                    ""
-                                                }`}
+                        <Link to={`/newchat/${_id}`} className="noUnderLine">
+                            <div className="avatarka">
+                                {avatar ? (
+                                    <img
+                                        src={`${urlUploadConst}/${avatar}`}
+                                        className=" border border-2 border-success"
+                                    ></img>
+                                ) : (
+                                    <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
+                                        <div className="fs-5 text-light fw-bolder">
+                                            {title &&
+                                                `${title.split(" ")[0][0].toUpperCase()}` +
+                                                    `${
+                                                        (title.split(" ").slice(1).pop() &&
+                                                            title.split(" ").slice(1).pop()[0].toUpperCase()) ||
+                                                        ""
+                                                    }`}
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-
+                                )}
+                            </div>
+                        </Link>
                         <div className="fs-4 fw-bolder ms-2">{`${title}`}</div>
                     </div>
-
                     <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                         {` _chatId: ${_id}`} <span className="visually-hidden">id чата</span>
                     </span>

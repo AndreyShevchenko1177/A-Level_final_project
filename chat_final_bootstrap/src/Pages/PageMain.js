@@ -66,9 +66,7 @@ export const CMessageInput = connect((s) => ({ curChatId: s.curChatId }), { mess
 
 //prettier-ignore
 const PageMain = ({
-    match: {
-        params: { _chatId },
-    },
+    match: {        params: { _chatId },    },
     _userId,
     messages, // из редакса через коннект
     getMesagesList = null,

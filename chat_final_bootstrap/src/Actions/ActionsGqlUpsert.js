@@ -51,8 +51,14 @@ const actionMediaUpsert = ({ chatId, mediaId }) => async (dispatch) => {
     );
 };
 
-export const actionCreateNewChat = ({ title, members, avaFile }) => async (dispatch) => {
+export const actionCreateNewChat = ({ _id, title, members, avaFile }) => async (dispatch) => {
     members = members.map((mem) => ({ _id: mem._id }));
+
+    let tempObj = { title, members };
+
+    if (_id) {
+        tempObj._id = _id;
+    }
 
     let chatData = await dispatch(
         actionPromise(
@@ -66,7 +72,7 @@ export const actionCreateNewChat = ({ title, members, avaFile }) => async (dispa
                         members{login}
                     }
                 }`,
-                { newChat: { title, members } }
+                { newChat: tempObj }
             )
         )
     );
@@ -90,5 +96,8 @@ export const actionCreateNewChat = ({ title, members, avaFile }) => async (dispa
         await dispatch(actionUserInfo(members[0]._id));
 
         history.push(`/main/${chatData.data.ChatUpsert._id}`);
+    } else {
+        alert("Ошибка создания/обновления чата");
+        history.goBack();
     }
 };

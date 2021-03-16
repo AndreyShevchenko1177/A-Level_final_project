@@ -33,6 +33,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
                             chats {
                                 _id
                                 title
+                                owner{_id}
                                 avatar {url}
                                 members{_id login nick avatar{url}}
                                 }

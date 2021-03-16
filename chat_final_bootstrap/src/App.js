@@ -39,6 +39,7 @@ const App = () => (
                 <Switch>
                     <Route path="/about" component={PageAbout} exact />
                     <Route path="/newchat" component={CPageNewChat} exact />
+                    <Route path="/newchat/:_chatId" component={CPageNewChat} exact />
                     <Route path="/upload" component={PageUpload} exact />
                     <Route path="/" component={PageLogin} exact />
                     <Route path="/main/:_chatId" component={CPageMain} exact />

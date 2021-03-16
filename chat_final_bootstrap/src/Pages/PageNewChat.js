@@ -14,8 +14,10 @@ import logo from "../images/logo23.png";
 import chat_square_text from "../icons/chat-square-text.svg";
 import userEvent from "@testing-library/user-event";
 
-const PageNewChat = ({ doSearchUsers = null }) => {
+// prettier-ignore
+const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } = {} } = {} }) => {
     const [searchUserStr, setSearchUserStr] = useState("");
+
 
     // если не залогинены - вперед к регистрации/логину
     if (!store.getState().auth || !store.getState().auth.login) {
@@ -53,7 +55,7 @@ const PageNewChat = ({ doSearchUsers = null }) => {
                         <CAllUsersList searchUserStr={searchUserStr} />
                     </div>
                     <div className="col-md-8">
-                        <CNewChatDashBoard />
+                        <CNewChatDashBoard _chatId={_chatId}/>
                     </div>
                 </div>
             </div>

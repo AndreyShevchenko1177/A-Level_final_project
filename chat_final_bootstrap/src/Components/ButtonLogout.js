@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "react-bootstrap";
 
 const ButtonLogout = ({ onLogout, isLoggedIn }) => (
-    <Button className="gradient" variant="secondary btn-sm" onClick={onLogout} disabled={!isLoggedIn}>
+    <Button className="gradient m-2" variant="secondary btn-sm" onClick={onLogout} disabled={!isLoggedIn}>
         <i className="bi bi-door-open"></i> Logout
     </Button>
 );

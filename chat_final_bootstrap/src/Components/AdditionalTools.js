@@ -26,13 +26,14 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
             ></input> */}
             {/* <span>🔍</span> */}
             <Button
-                className="gradient ms-2 mb-2"
+                className="gradient ms-2 mb-2 rounded-3"
                 variant="success btn-sm"
                 onClick={() => {
                     history.push("/newchat");
                 }}
             >
-                <i className="bi bi-chat-left-text"></i> New Chat
+                <i className="bi bi-chat-left-text"></i>
+                <span className="ms-2">New Chat</span>
             </Button>
             {/* <Button className="gradient" variant="secondary btn-sm  m-2">
                 Join to another chat

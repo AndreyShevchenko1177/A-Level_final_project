@@ -4,7 +4,7 @@ import { CAdditionalTools, ChatsList } from "../Components";
 export const Sidebar = () => {
     return (
         <>
-            <div className="bg-light gradient shadow-sm border-2 rounded-3">
+            <div className="bg-light gradient shadow-sm border-2 rounded-3 flex-grow-1">
                 <CUserInfo />
                 <CAdditionalTools />
                 <ChatsList className="ChatsList" />

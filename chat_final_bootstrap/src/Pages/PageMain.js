@@ -101,16 +101,24 @@ const PageMain = ({
   
 
     return (
-        <div className="container-fluid ">
-            <div className="row g-3">
-                <div className="col-md-4  bg-light">
-                    <Sidebar />
-                </div>
-                <div className="col-md-8">
-                    <div className="pageMain_ChatMessages mb-2">
-                        <ChatMessages _chatId={_chatId} />
+        <div className="maxWidthPageMain">
+            <div className="container-fluid ">
+                <div className="row g-3 ">
+                    <div className="col-md-4">
+                        <div className="maxWidthForSideBar shadow">
+                            <Sidebar />
+                        </div>
                     </div>
-                    <CMessageInput />
+                    <div className="col-md-8">
+                        <div className="pageMain_ChatMessages mb-2">
+                            <div className="maxWidthForMsg">
+                                <ChatMessages _chatId={_chatId} />
+                            </div>
+                        </div>
+                        <div className="maxWidthForMsg">
+                            <CMessageInput />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

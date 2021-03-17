@@ -23,7 +23,6 @@ export const Header = () => (
                 </Nav>
                 <Nav className="ms-auto">
                     <CButtonLogout />
-                    <CButtonUpload />
                 </Nav>
             </Navbar.Collapse>
         </Navbar>

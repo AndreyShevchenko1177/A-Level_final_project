@@ -52,6 +52,8 @@ const actionMediaUpsert = ({ chatId, mediaId }) => async (dispatch) => {
 };
 
 export const actionCreateNewChat = ({ _id, title, members, avaFile }) => async (dispatch) => {
+    // console.log(avaFile);
+
     members = members.map((mem) => ({ _id: mem._id }));
 
     let tempObj = { title, members };
@@ -89,7 +91,7 @@ export const actionCreateNewChat = ({ _id, title, members, avaFile }) => async (
                 body: dataSingl,
             }).then((res) => res.json());
 
-            dispatch(actionMediaUpsert({ chatId: chatData.data.ChatUpsert._id, mediaId: avaUploadResult._id }));
+            await dispatch(actionMediaUpsert({ chatId: chatData.data.ChatUpsert._id, mediaId: avaUploadResult._id }));
         }
 
         // обновить списки моих чатов

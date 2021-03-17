@@ -1,9 +1,10 @@
-import { ButtonToMain } from "../Components";
+import { ButtonToMain, ButtonCancel } from "../Components";
 import { urlUploadConst } from "../const";
 import { actionDelUserFromChatList, actionCreateNewChat, actionAddUserToChatList } from "../Actions";
 import { connect } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
+import { Button } from "react-bootstrap";
 import { store } from "../Reducers";
 import { useRef } from "react";
 import history from "../history";
@@ -42,25 +43,26 @@ const CMemberItem = connect(
     { dellFromList: actionDelUserFromChatList }
 )(MemberItem);
 
-const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = [], addUserToList }) => {
+const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = [], addUserToList, myId }) => {
     const [chatMembers, setChatMembers] = useState(Object.values(members));
     const [inpTitle, setInpTitle] = useState("");
     const uploadRef = useRef(null); // ссылка на input type=file для авы
     const inputTiylegRef = useRef(null);
     const [srcAva, setSrcAva] = useState("");
+    const chatInfo = useRef({});
 
     // достаем из redux даные о чате, который хотим редактировать
     useEffect(() => {
         if (_chatId) {
-            let chatInfo = {};
+            // let chatInfo = {};
 
             myChats = myChats.filter((chat) => chat._id === _chatId); // оставляем в myChats только редактируемый
-            chatInfo = myChats && myChats[0];
+            chatInfo.current = myChats && myChats[0];
 
-            if (chatInfo && Object.keys(chatInfo).length) {
-                inputTiylegRef.current.value = chatInfo.title;
-                setInpTitle(chatInfo.title);
-                chatInfo.members.forEach((mem) => {
+            if (chatInfo.current && Object.keys(chatInfo.current).length) {
+                inputTiylegRef.current.value = chatInfo.current.title;
+                setInpTitle(chatInfo.current.title);
+                chatInfo.current.members.forEach((mem) => {
                     if (typeof addUserToList === "function") {
                         addUserToList(mem);
                     }
@@ -100,14 +102,19 @@ const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = 
         }
     }
 
+    // console.log(chatInfo.current);
+
     return (
         <>
             <div className="ChatDashBoard bg-light">
                 <h5>{_chatId ? "Update chat:" : "New Chat:"}</h5>
+                {myId !== (chatInfo.current && chatInfo.current.owner && chatInfo.current.owner._id) && _chatId && (
+                    <span className="text-danger fw-bolder mb-2">You have no rights to edit this chat.</span>
+                )}
                 <table className="table table-bordered align-middle">
                     <tbody>
                         <tr>
-                            <td className="fw-bolder">Chat title:</td>
+                            <td className={`fw-bolder text-${!inpTitle ? "danger" : "dark"}`}>Chat title:</td>
                             <td>
                                 <input
                                     className="form-control mb-2 p-2 border border-success border-2"
@@ -120,45 +127,52 @@ const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = 
                         <tr>
                             <td>Chat avatar:</td>
                             <td>
-                                <div className="avatarka ">
-                                    {srcAva ? (
-                                        <img
-                                            // src={`${urlUploadConst}/${avatarUrl}`}
-                                            src={srcAva}
-                                            className="border border-2 border-success"
-                                        ></img>
-                                    ) : (
-                                        <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
-                                            <div className="fs-5 text-light fw-bolder">
-                                                {!!inpTitle &&
-                                                    `${
-                                                        inpTitle.trim().split(" ")[0] &&
-                                                        inpTitle.trim().split(" ")[0][0] &&
-                                                        inpTitle.trim().split(" ")[0][0].toUpperCase()
-                                                    }` +
+                                <div className="d-flex align-items-center">
+                                    <div className="avatarka ">
+                                        {srcAva ||
+                                        (chatInfo.current && chatInfo.current.avatar && chatInfo.current.avatar.url) ? (
+                                            <img
+                                                src={srcAva || `${urlUploadConst}/${chatInfo.current.avatar.url}`}
+                                                className="border border-2 border-success"
+                                            ></img>
+                                        ) : (
+                                            <div className="d-flex justify-content-center align-items-center bg-success border border-2 border-success gradient">
+                                                <div className="fs-5 text-light fw-bolder">
+                                                    {!!inpTitle &&
                                                         `${
-                                                            (inpTitle.trim().split(" ").slice(1).pop() &&
-                                                                inpTitle.trim().split(" ").slice(1).pop()[0] &&
-                                                                inpTitle
-                                                                    .trim()
-                                                                    .split(" ")
-                                                                    .slice(1)
-                                                                    .pop()[0]
-                                                                    .toUpperCase()) ||
-                                                            ""
-                                                        }`}
+                                                            inpTitle.trim().split(" ")[0] &&
+                                                            inpTitle.trim().split(" ")[0][0] &&
+                                                            inpTitle.trim().split(" ")[0][0].toUpperCase()
+                                                        }` +
+                                                            `${
+                                                                (inpTitle.trim().split(" ").slice(1).pop() &&
+                                                                    inpTitle.trim().split(" ").slice(1).pop()[0] &&
+                                                                    inpTitle
+                                                                        .trim()
+                                                                        .split(" ")
+                                                                        .slice(1)
+                                                                        .pop()[0]
+                                                                        .toUpperCase()) ||
+                                                                ""
+                                                            }`}
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
+                                        )}
+                                    </div>
+
+                                    <label className="btn btn-default btn-file">
+                                        <input
+                                            type="file"
+                                            onChange={previewFile}
+                                            ref={uploadRef}
+                                            accept="image/*,image/jpeg"
+                                            className="form-control form-control-sm m-2"
+                                            aria-label="file example"
+                                            style={{ display: "none" }}
+                                        />
+                                        Browse...
+                                    </label>
                                 </div>
-                                <input
-                                    type="file"
-                                    onChange={previewFile}
-                                    ref={uploadRef}
-                                    accept="image/*,image/jpeg"
-                                    className="form-control form-control-sm m-2"
-                                    aria-label="file example"
-                                />
                             </td>
                         </tr>
                         <tr>
@@ -171,23 +185,25 @@ const NewChatDashBoard = ({ members = {}, chatUpsert = null, _chatId, myChats = 
                         </tr>
                     </tbody>
                 </table>
-                <button className="btn-success gradient rounded" disabled={!inpTitle} onClick={doCreateNewChat}>
-                    {_chatId ? "Update chat" : "Create new chat"}
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
-                    {/*  */}
-                </button>
-                {!inpTitle && <span className="text-danger"> You should fill in the 'Chat title' field.</span>}
+                <ButtonCancel />
+                {!(myId !== (chatInfo.current && chatInfo.current.owner && chatInfo.current.owner._id) && _chatId) && (
+                    <Button
+                        className="gradient rounded-3 ms-2 mb-2"
+                        disabled={!inpTitle}
+                        onClick={doCreateNewChat}
+                        variant="success btn-sm"
+                    >
+                        <i className="bi bi-check-square"></i>
+                        <span className="ms-2">{_chatId ? "Update chat" : "Create new chat"}</span>
+                    </Button>
+                )}
             </div>
         </>
     );
 };
 
 export const CNewChatDashBoard = connect(
-    (s, { _chatId }) => ({ myChats: s.auth.chats, members: s.newChatUsers, _chatId }),
+    (s, { _chatId }) => ({ myChats: s.auth.chats, members: s.newChatUsers, myId: s.auth.payloadId, _chatId }),
     {
         chatUpsert: actionCreateNewChat,
         addUserToList: actionAddUserToChatList,

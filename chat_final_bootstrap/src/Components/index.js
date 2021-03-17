@@ -4,6 +4,7 @@ import { ChatMessages } from "./ChatMessages";
 import { CButtonLogout } from "./ButtonLogout";
 import { CButtonUpload } from "./ButtonUpload";
 import { ButtonToMain } from "./ButtonToMain";
+import { ButtonCancel } from "./ButtonCansel";
 import { CLoginInfo } from "./LoginInfo";
 import { Counter } from "./Counter";
 import { CNewChatDashBoard } from "./NewChatDashBoard";
@@ -16,6 +17,7 @@ export {
     CLoginInfo,
     CButtonUpload,
     ButtonToMain,
+    ButtonCancel,
     Counter,
     CNewChatDashBoard,
 };

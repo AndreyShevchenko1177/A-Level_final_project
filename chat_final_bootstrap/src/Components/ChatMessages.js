@@ -62,8 +62,8 @@ const MessageItem = ({
                 {/* <span>{`myid: ${myId}`}</span> */}
                 {/* <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p> */}
                 <div className="lh-sm mb-2 text-success fw-bolder">{`${nick}`}</div>
-                <div className="text-dark fs-5 lh-sm">{text}</div>
-                <span className="text-success">{`message id: ${_id}`}</span>
+                <div className="text-dark fs-6 lh-sm mb-3">{text}</div>
+                {/* <span className="text-success">{`message id: ${_id}`}</span> */}
                 <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                     {dateStr} <span className="visually-hidden">дата сообщения</span>
                 </span>

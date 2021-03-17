@@ -47,13 +47,14 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                             )}
                         </div>
 
-                        <div className="text-dark fs-5 fw-bolder ms-2">{`${title}`}</div>
+                        <div className="text-dark fs-6 fw-bolder ms-2 lh-1">{`${title}`}</div>
                     </div>
                     <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                         {Counter(_id)}
                         <span className="visually-hidden">всего сообщений</span>
                     </span>
-                    <span className="text-nowrap"> chatID: {_id}</span>
+                    {/* FIXME: */}
+                    {/* <span className="text-nowrap"> chatID: {_id}</span> */}
                 </li>
             </>
         </Link>

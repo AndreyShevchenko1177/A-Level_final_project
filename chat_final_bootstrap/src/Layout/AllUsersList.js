@@ -99,12 +99,13 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
                             </div>
                         )}
                     </div>
-                    <div className="text-dark fs-5  ms-2">{`${nick}`}</div>
+                    <div className="text-dark fs-5 ms-2 lh-sm">{`${nick}`}</div>
                 </div>
-                <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
+                {/* FIXME: */}
+                {/* <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                     {_id}
                     <span className="visually-hidden">_id пользователя</span>
-                </span>
+                </span> */}
             </li>
         </>
     );

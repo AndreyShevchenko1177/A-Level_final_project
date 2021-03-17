@@ -24,7 +24,7 @@ function authReducer(state, action) {
                 token: action.jwt,
                 payload: jwt_decode(action.jwt).sub.login,
                 payloadId: jwt_decode(action.jwt).sub.id,
-                //FIXME: отладочный _userId
+                //FIXME: ниже отладочный _userId
                 // payloadId: "5e97105693e2915e617c6fc1",
             };
         } catch (error) {

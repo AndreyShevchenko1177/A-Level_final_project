@@ -76,6 +76,22 @@ body {
     max-height: calc(100vh - 250px);
     min-height: calc(100vh - 250px);
 }
+
+.maxWidthForSideBar {
+    max-width: 350px;
+    margin: auto;
+}
+
+.maxWidthPageMain {
+    max-width: 1300px;
+    margin: auto;
+}
+
+.maxWidthForMsg {
+    max-width: 800px;
+    margin: auto;
+}
+
 .MessagesList {
     max-height: calc(100vh - 330px);
     min-height: calc(100vh - 330px);
@@ -116,6 +132,7 @@ body {
 
 .ChatsList {
     max-height: calc(100vh - 220px);
+    min-height: calc(100vh - 220px);
     overflow: auto;
 
     img {

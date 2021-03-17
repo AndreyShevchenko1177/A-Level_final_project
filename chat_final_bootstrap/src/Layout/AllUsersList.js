@@ -11,40 +11,6 @@ import { useRef } from "react";
 import history from "../history";
 import { CUserInfo } from "../Layout";
 
-// заглушка для отладки на случай "сервер лег / вырубили свет"
-const AllUsersConst = [
-    {
-        _id: "5e25e0a41719bf13be585729",
-        login: "test3",
-        nick: "",
-        avatar: null,
-    },
-    {
-        _id: "5e25bf671719bf13be5856c4",
-        login: "t",
-        nick: "t",
-        avatar: null,
-    },
-    {
-        _id: "5f3e4cd7c3de58221910d207",
-        login: "Kiliar",
-        nick: "Kiliar",
-        avatar: null,
-    },
-    {
-        _id: "5f528e96c3de58221910d20c",
-        login: "mdm1",
-        nick: "jj",
-        avatar: null,
-    },
-    {
-        _id: "5f568538c3de58221910d20e",
-        login: "11",
-        nick: "11",
-        avatar: null,
-    },
-];
-
 const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUserFromList = null, newChatUsers }) => {
     const avatarUrl = avatar && avatar.url;
 
@@ -68,7 +34,7 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
     return (
         <>
             <li
-                className={`list-group-item list-group-item-${
+                className={`m-2 list-group-item-${
                     _id in newChatUsers || _id === myId ? "success rounded-pill shadow" : "light rounded-3 shadow-sm"
                 } m-1 gradient border-2 `}
                 onClick={doSelectUser}
@@ -128,9 +94,6 @@ const AllUsersList = ({
     createNewChatList = null,
     searchUserStr,
 }) => {
-    //  FIXME: следующая строка - для отладки без инета
-    // searchUserResultArr = AllUsersConst;
-
     // создаем новый список пользователей нового чата со мной во главе
     useEffect(() => {
         if (typeof createNewChatList === "function")
@@ -172,9 +135,8 @@ const AllUsersList = ({
         .sort((a, b) => ((a.nick || a.login) > (b.nick || b.login) ? 1 : -1));
 
     return (
-        <div className="bg-light">
-            <h6>Choose members:</h6>
-            <ul className="list-group allUsersList" role="tablist">
+        <div className="bg-light AllUsersList rounded-3">
+            <ul className="list-group " role="tablist">
                 {!!searchUserResultArr &&
                     searchUserResultArr.map((user) => <CUserItem key={user._id} {...user} myId={myId} />)}
             </ul>

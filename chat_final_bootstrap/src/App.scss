@@ -52,11 +52,6 @@ body {
     min-width: 250px;
 }
 
-.allUsersList {
-    max-height: calc(100vh - 300px);
-    overflow: auto;
-}
-
 .avatarka {
     > img,
     > div {
@@ -139,6 +134,12 @@ body {
         width: 48px;
         height: 48px;
     }
+}
+
+.AllUsersList {
+    max-height: calc(100vh - 285px);
+    min-height: calc(100vh - 285px);
+    overflow: auto;
 }
 
 .messagesArea {

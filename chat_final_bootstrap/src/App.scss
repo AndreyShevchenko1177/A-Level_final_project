@@ -137,8 +137,8 @@ body {
 }
 
 .AllUsersList {
-    max-height: calc(100vh - 285px);
-    min-height: calc(100vh - 285px);
+    max-height: calc(100vh - 215px);
+    min-height: calc(100vh - 215px);
     overflow: auto;
 }
 
@@ -149,7 +149,7 @@ body {
 
 .ChatDashBoard {
     min-height: calc(100vh - 110px);
-    padding: 20px;
+    padding: 10px 20px;
     table td:first-child {
         white-space: nowrap;
         text-align: end;
@@ -157,5 +157,17 @@ body {
     }
 }
 
+.ModalUserDashboard {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 10;
+}
+
 @import "/node_modules/bootstrap/scss/bootstrap";
 @import "./login.scss";
+// @media (prefers-reduced-motion: reduce);
+
+* {
+    transition: all 0.3s linear;
+}

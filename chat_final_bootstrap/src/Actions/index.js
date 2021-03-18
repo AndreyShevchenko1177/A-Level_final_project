@@ -8,7 +8,7 @@ import {
 } from "./ActionsGql";
 import { actionMsgNewChat, actionCurChatId, actionMsgInsertInHead } from "./ActionsMsg";
 import { actionAddUserToChatList, actionDelUserFromChatList, actionNewChatList } from "./ActionsChatUsers";
-import { actionCreateNewChat, actionMessageUpsert } from "./ActionsGqlUpsert";
+import { actionCreateNewChat, actionMessageUpsert, actionUserUpdate } from "./ActionsGqlUpsert";
 
 export {
     actionUserInfo,
@@ -29,4 +29,5 @@ export {
     actionAllUsersFind,
     actionCreateNewChat,
     actionMessageUpsert,
+    actionUserUpdate,
 };

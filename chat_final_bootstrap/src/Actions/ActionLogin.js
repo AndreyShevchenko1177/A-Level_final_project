@@ -6,7 +6,6 @@ import { gql } from "../Actions";
 export const actionAuthLogin = (jwt) => ({ type: "LOGIN", jwt });
 
 export const actionAuthLogout = () => {
-    //FIXME: надо засунуть router в redux
     history.push("/");
     return { type: "LOGOUT" };
 };
@@ -36,7 +35,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
                                 owner{_id}
                                 avatar {url}
                                 members{_id login nick avatar{url}}
-                                }
+                            }
                         }
                     }`,
                 { userId: JSON.stringify([{ _id: userId }]) }
@@ -65,7 +64,7 @@ export const actionLogin = (login, password) => async (dispatch) => {
             )
         )
     );
-    console.log("loginData", loginData);
+    // console.log("loginData", loginData);
 
     if (loginData && loginData.data.login) {
         dispatch(actionAuthLogin(loginData.data.login));
@@ -78,7 +77,7 @@ export const actionLogin = (login, password) => async (dispatch) => {
                 (store.getState().promise.login &&
                     store.getState().promise.login.error &&
                     store.getState().promise.login.error.message) ||
-                "Проблемы с сетью/сервером"
+                "Проверьте login password"
             }`
         );
     }

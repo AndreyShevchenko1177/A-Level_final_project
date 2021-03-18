@@ -199,8 +199,13 @@ const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
                         </Link>
                         <div className="fs-4 fw-bolder ms-2">{`${title}`}</div>
                     </div>
-                    <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
-                        {` _chatId: ${_id}`} <span className="visually-hidden">id чата</span>
+                    {/* <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary"> */}
+                    <span className="position-absolute bottom-0 end-0 rounded-pill bg-success">
+                        <Link to={`/newchat/${_id}`} className="noUnderLine text-light">
+                            {/* {` _chatId: ${_id}`} */}
+                            <i className="bi bi-pencil-fill text- mx-3"></i>{" "}
+                            {/* <span className="visually-hidden">id чата</span> */}
+                        </Link>
                     </span>
                 </div>
             )}

@@ -40,11 +40,11 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
                 <div className="row g-3">
                     <div className="col-md-4">
                         <div className="maxWidthForSideBar shadow">
-                            <div className="bg-light gradient shadow-sm border-2 rounded-3 flex-grow-1">
-                                <CUserInfo />
-                                <ButtonToMain />
-                                <ButtonCancel />
-
+                            <div className="bg-light gradient shadow-sm border-2 rounded-3 flex-grow-1 pt-2">
+                                {/* <CUserInfo /> */}
+                                {/* <ButtonToMain /> */}
+                                {/* <ButtonCancel /> */}
+                                <h6 className="ms-2 fs-5">Choose members:</h6>
                                 <div className="p-2">
                                     <input
                                         className="form-control mb-2 border border-success border-2"
@@ -55,7 +55,7 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
                                     ></input>
                                 </div>
 
-                                <h6 className="ms-2 fs-4">Choose members:</h6>
+                                {/* <h6 className="ms-2 fs-4">Choose members:</h6> */}
 
                                 <CAllUsersList searchUserStr={searchUserStr} />
                             </div>

@@ -6,7 +6,7 @@ import { CButtonUpload } from "./ButtonUpload";
 import { ButtonToMain } from "./ButtonToMain";
 import { ButtonCancel } from "./ButtonCansel";
 import { CLoginInfo } from "./LoginInfo";
-import { Counter } from "./Counter";
+import { CCounter } from "./Counter";
 import { CNewChatDashBoard } from "./NewChatDashBoard";
 
 export {
@@ -18,6 +18,6 @@ export {
     CButtonUpload,
     ButtonToMain,
     ButtonCancel,
-    Counter,
+    CCounter,
     CNewChatDashBoard,
 };

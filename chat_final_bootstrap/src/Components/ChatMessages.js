@@ -61,8 +61,11 @@ const MessageItem = ({
             >
                 {/* <span>{`myid: ${myId}`}</span> */}
                 {/* <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p> */}
+
                 <div className="lh-sm mb-2 text-success fw-bolder">{`${nick}`}</div>
+                {/* <div className="text-dark fs-6 lh-sm mb-3">{text.replace(/\r?\n|\r/g, "\n")}</div> */}
                 <div className="text-dark fs-6 lh-sm mb-3">{text}</div>
+
                 {/* <span className="text-success">{`message id: ${_id}`}</span> */}
                 <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
                     {dateStr} <span className="visually-hidden">дата сообщения</span>
@@ -157,7 +160,7 @@ const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
     // );
 
     let avatar = chatInfo && chatInfo[0] && chatInfo[0].avatar && chatInfo[0].avatar.url;
-    let title = chatInfo && chatInfo[0] && chatInfo[0].title;
+    let title = chatInfo && chatInfo[0] && chatInfo[0].title.trim();
 
     useEffect(() => {
         if (

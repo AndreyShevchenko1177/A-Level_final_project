@@ -1,26 +1,16 @@
 import { useEffect } from "react";
 import { useRef, useState } from "react";
 import { gql } from "../Actions";
+import { connect } from "react-redux";
 
-export const Counter = (chatId) => {
-    const [res, setRes] = useState("error");
-    const [id, setId] = useState(chatId);
+const Counter = ({ chatId, countMsg }) => {
+    // console.log(chatId, countMsg);
 
-    useEffect(() => messageCountByChatId(id), [id]);
+    if (!chatId || !countMsg) {
+        return <span>0</span>;
+    }
 
-    const messageCountByChatId = async (id) => {
-        let count = await gql(
-            `query MessageCountByChatId ($chatId:String){
-            MessageCount(query: $chatId)
-        }`,
-            { chatId: JSON.stringify([{ "chat._id": id }]) }
-        );
-
-        if (!count.data.errors) setRes(count.data.MessageCount);
-    };
-
-    if (!id) return <span>0</span>;
-    // console.log(typeof res, res);
-
-    return <span>{res}</span>;
+    return <span>{countMsg[chatId] || 0}</span>;
 };
+
+export const CCounter = connect((s) => ({ countMsg: s.countMsg }))(Counter);

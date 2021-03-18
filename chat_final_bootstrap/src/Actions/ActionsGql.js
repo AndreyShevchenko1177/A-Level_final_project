@@ -2,7 +2,7 @@
 
 import { urlConst } from "../const";
 import { actionPromise } from "../Reducers";
-import { actionMsgNewChat, actionMsgInsertInHead } from "../Actions";
+import { actionMsgNewChat, actionMsgInsertInHead, actionUpdateChatCreatedAt } from "../Actions";
 import { store } from "../Reducers";
 
 const getGQL = (url) => (query, variables = {}) => {
@@ -19,13 +19,14 @@ const getGQL = (url) => (query, variables = {}) => {
 
 export const gql = getGQL(urlConst);
 
-const toQuery = (str, fields = ["title", "text", "login", "nick", "_id"]) => {
+const toQuery = (str, fields = ["title", "text", "login", "nick", '"_id"']) => {
     str = str.replace(/ +/g, " ").trim(); // "/ +/g" - оставляет только по одному пробелу в последовательностях пробелов
     str = "/" + str.split(" ").join("|") + "/";
 
     let arr = fields.map((s) => {
         return { [s]: str };
     });
+    // console.log({ $or: arr });
     return { $or: arr };
 };
 
@@ -88,13 +89,66 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
     );
     // console.log("actionFindMessagesByChatId result: ", messages);
 
-    if (messages && messages.data && messages.data.MessageFind && messages.data.MessageFind.length) {
-        if (!skip) {
-            dispatch(actionMsgNewChat(messages.data.MessageFind.reverse()));
+    // если данные приехали - добавить в store либо как новый чат, либо как добавка к существующему
+    // в зависимости от skip
+
+    if (messages && messages.data && messages.data.MessageFind) {
+        if (messages.data.MessageFind.length) {
+            if (!skip) {
+                dispatch(actionMsgNewChat(messages.data.MessageFind.reverse()));
+            } else {
+                dispatch(actionMsgInsertInHead(messages.data.MessageFind.reverse()));
+            }
+
+            // и поменять в store.auth.chats в соответствующем чате поле createdAt на данные
+            // из поля createdAt последнего прибывшего сообщения
+            // теперь store.auth.chats...createdAt будет говорить о дате последнего изменения в этом чате
+
+            // console.log("MessageFind", _chatId, messages.data.MessageFind[messages.data.MessageFind.length - 1].createdAt);
+
+            dispatch(
+                actionUpdateChatCreatedAt(
+                    _chatId,
+                    messages.data.MessageFind[messages.data.MessageFind.length - 1].createdAt
+                )
+            );
+
+            // подсчет количества сообщений в чате с таким-то id
+            let count = await gql(
+                `query MessageCountByChatId ($chatId:String){
+                    MessageCount(query: $chatId)
+                }`,
+                { chatId: JSON.stringify([{ "chat._id": _chatId }]) }
+            );
+
+            if (!count.data.errors) {
+                dispatch({
+                    type: "NEW_COUNT",
+                    count: {
+                        [_chatId]: count.data.MessageCount,
+                    },
+                });
+            }
         } else {
-            dispatch(actionMsgInsertInHead(messages.data.MessageFind.reverse()));
+            dispatch({
+                type: "NEW_COUNT",
+                count: {
+                    [_chatId]: 0,
+                },
+            });
         }
     }
+};
+
+const messageCountByChatId = async (id) => {
+    let count = await gql(
+        `query MessageCountByChatId ($chatId:String){
+            MessageCount(query: $chatId)
+        }`,
+        { chatId: JSON.stringify([{ "chat._id": id }]) }
+    );
+
+    // if (!count.data.errors) setRes(count.data.MessageCount);
 };
 
 // получить все сообщения из чата с такм-то _id
@@ -125,7 +179,7 @@ export const actionGetMessagesByChatId = (_chatId) => async (dispatch) => {
             )
         )
     );
-    console.log("actionGetMessagesByChatId");
+    // console.log("actionGetMessagesByChatId");
 };
 
 export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => {
@@ -161,6 +215,9 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
 export const actionAllUsersFind = (skip = 0, str = "") => async (dispatch) => {
     str = toQuery(str);
 
+    //FIXME:
+    // console.log(str);
+
     let users = await dispatch(
         actionPromise(
             "UserFind",
@@ -173,7 +230,7 @@ export const actionAllUsersFind = (skip = 0, str = "") => async (dispatch) => {
                         avatar{url}
                     }
                 }`,
-                { query: JSON.stringify([str, { sort: [{ _id: -1 }], skip: [skip], limit: [100] }]) }
+                { query: JSON.stringify([str, { sort: [{ login: -1 }], skip: [skip], limit: [100] }]) }
             )
         )
     );

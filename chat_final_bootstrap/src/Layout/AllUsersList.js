@@ -34,7 +34,7 @@ const UserItem = ({ _id, login, nick, avatar, myId, addUserToList = null, delUse
     return (
         <>
             <li
-                className={`m-2 list-group-item-${
+                className={`position-relative m-2 list-group-item-${
                     _id in newChatUsers || _id === myId ? "success rounded-pill shadow" : "light rounded-3 shadow-sm"
                 } m-1 gradient border-2 `}
                 onClick={doSelectUser}

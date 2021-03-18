@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import userEvent from "@testing-library/user-event";
 
 const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
-    const textRef = useRef("");
+    const textRef = useRef({});
     const [text, setText] = useState("");
 
     const textTyping = (e) => {
@@ -18,7 +18,8 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
 
     // отправка по Enter
     const sendMsgByEnterKey = (e) => {
-        if (["NumpadEnter", "Enter"].includes(e.code) && text.trim()) {
+        console.log(e);
+        if (["NumpadEnter", "Enter"].includes(e.code) && !e.shiftKey && text.trim()) {
             sendMsg();
         }
     };
@@ -27,10 +28,19 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
         if (text.trim()) {
             // console.log(text.trim());
             setText("");
-            textRef.current.value = "";
+            if (textRef.current) {
+                textRef.current.value = "";
+            }
             messageUpsert({ text: text.trim(), chatId: curChatId });
         }
     };
+
+    useEffect(() => {
+        setText("");
+        if (textRef.current) {
+            textRef.current.value = "";
+        }
+    }, [curChatId]);
 
     return (
         <>
@@ -38,6 +48,9 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
                 <div className="bg-light shadow-sm border border-2 rounded-3 MessageInput">
                     {/* <div> InputArea</div>
                     <div> {`${curChatId}`}</div> */}
+
+                    {/* -------------- Поле отправки сообщения -----------------*/}
+
                     <div className="position-relative">
                         <textarea
                             className="form-control h-75"

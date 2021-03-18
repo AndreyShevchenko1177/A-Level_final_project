@@ -48,7 +48,7 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
                                 <div className="p-2">
                                     <input
                                         className="form-control mb-2 border border-success border-2"
-                                        placeholder="Search users by nick/login/_id"
+                                        placeholder="Search users by nick/login"
                                         onInput={(e) => {
                                             setSearchUserStr(e.target.value);
                                         }}

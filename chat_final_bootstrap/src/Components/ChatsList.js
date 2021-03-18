@@ -2,15 +2,13 @@ import logo from "../images//logo23.jpg";
 import { connect } from "react-redux";
 import { urlUploadConst } from "../const";
 import { Link } from "react-router-dom";
-import { Counter } from "../Components";
+import { CCounter } from "../Components";
 import personFillIcon from "../icons/person-fill.svg";
 import history from "../history";
 import { useEffect } from "react";
 import { useState } from "react";
 
-// const CCounter = connect;
-
-const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) => {
+const ChatItem = ({ _id = "", avatar, title, currentChatId }) => {
     // здесь _id, avatar, title - чата,
     // currentChatId - текущий выбраный чат
     // console.log("ChatItem - ", _id, currentChatId);
@@ -50,7 +48,7 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
                         <div className="text-dark fs-6 fw-bolder ms-2 lh-1">{`${title}`}</div>
                     </div>
                     <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
-                        {Counter(_id)}
+                        <CCounter chatId={_id} />
                         <span className="visually-hidden">всего сообщений</span>
                     </span>
                     {/* FIXME: */}
@@ -62,15 +60,13 @@ const ChatItem = ({ _id = "", avatar, title, messages, userId, currentChatId }) 
 };
 
 const List = ({ arrayOfChats, userId, currentChatId }) => {
-    // console.log(arrayOfChats);
+    // console.log(arrayOfChats, msgsObj);
     // arrayOfChats - массив всех чатов пользователя
+
     if (!arrayOfChats) return <></>;
-    // console.log("+++++++++++ ", arrayOfChats);
 
-    // сортируем чаты так, чтобы сверху показывались чаты, в которых последнее сообщение "свежее" всех остальных
-    // чаты без сообщений отправляются в конец списка
-    // на сервере сделать такую сортировку не получается
-
+    // сортировка массива чатов по полю createdAt
+    // у кого createdAt больше (свежее) - тот в начало массива
     // надо "попросить" backend-ера внести в сущность Chat поле "lastModified"
     // либо "lastMessageCreatedAt"
 
@@ -80,16 +76,8 @@ const List = ({ arrayOfChats, userId, currentChatId }) => {
     //     return +b.messages[b.messages.length - 1].createdAt - +a.messages[a.messages.length - 1].createdAt;
     // });
 
-    // сортировка вариант2:
-    // за последнюю дату чата принимается дата последнего сообщения либо если нет сообщений,
-    // то дата создания чата
-
     //FIXME:
-    arrayOfChats.sort((a, b) => {
-        a = a.messages && a.messages.length ? a.messages[a.messages.length - 1].createdAt : a.createdAt;
-        b = b.messages && b.messages.length ? b.messages[b.messages.length - 1].createdAt : b.createdAt;
-        return +b - +a;
-    });
+    arrayOfChats.sort((a, b) => b.createdAt - a.createdAt);
 
     // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
     // console.log("chatsList - : ", currentChatId);

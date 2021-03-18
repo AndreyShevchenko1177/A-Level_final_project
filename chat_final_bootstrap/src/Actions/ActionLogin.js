@@ -1,7 +1,7 @@
 import { actionPromise } from "../Reducers";
 import history from "../history";
 import { store } from "../Reducers";
-import { gql } from "../Actions";
+import { gql, actionSearchMessagesByChatId } from "../Actions";
 
 export const actionAuthLogin = (jwt) => ({ type: "LOGIN", jwt });
 
@@ -12,7 +12,6 @@ export const actionAuthLogout = () => {
 
 export const actionAuthInfo = ({ login, nick, _id, avatar, chats = [] }) => {
     let url = avatar && avatar.url;
-    // console.log("actionAuthInfo - ", login, nick, _id, url);
     return { type: "INFO", userInfo: { login, nick, _id, url, chats } };
 };
 
@@ -32,6 +31,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
                             chats {
                                 _id
                                 title
+                                createdAt
                                 owner{_id}
                                 avatar {url}
                                 members{_id login nick avatar{url}}
@@ -46,7 +46,14 @@ export const actionUserInfo = (userId) => async (dispatch) => {
     // console.log("UserFindOne - ##########", userData.data.UserFindOne);
 
     if (userData && userData.data.UserFindOne) {
-        dispatch(actionAuthInfo(userData.data.UserFindOne));
+        dispatch(actionAuthInfo(userData.data.UserFindOne)); // получить доп инфу о юзере
+        if (userData.data.UserFindOne.chats) {
+            userData.data.UserFindOne.chats.forEach(async (chat) => {
+                // получить по 10 первых сообщений и каждого из моих чатов
+                await dispatch(actionSearchMessagesByChatId(chat._id));
+            });
+        }
+        //
     } else {
         console.log("UserFindOne - ошибка");
     }
@@ -102,10 +109,13 @@ export const actionRegistration = (login, password, nick) => async (dispatch) =>
         )
     );
 
-    // console.log("regdata - ", regData);
-
-    if (regData && regData.data && regData.data.UserUpsert && regData.data.UserUpsert.login) {
-        await actionLogin(login, password)(dispatch);
+    console.log("regdata - ", regData);
+    if (!regData.error) {
+        if (regData && regData.data && regData.data.UserUpsert && regData.data.UserUpsert.login) {
+            await actionLogin(login, password)(dispatch);
+        } else {
+            alert(`Ошибка: ${regData.errors[0].message}`);
+        }
     } else {
         alert(
             `Ошибка регистрации: ${

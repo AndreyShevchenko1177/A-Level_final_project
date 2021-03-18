@@ -6,7 +6,7 @@ import {
     actionSearchChat,
     actionAllUsersFind,
 } from "./ActionsGql";
-import { actionMsgNewChat, actionCurChatId, actionMsgInsertInHead } from "./ActionsMsg";
+import { actionMsgNewChat, actionCurChatId, actionMsgInsertInHead, actionUpdateChatCreatedAt } from "./ActionsMsg";
 import { actionAddUserToChatList, actionDelUserFromChatList, actionNewChatList } from "./ActionsChatUsers";
 import { actionCreateNewChat, actionMessageUpsert, actionUserUpdate } from "./ActionsGqlUpsert";
 
@@ -30,4 +30,5 @@ export {
     actionCreateNewChat,
     actionMessageUpsert,
     actionUserUpdate,
+    actionUpdateChatCreatedAt,
 };

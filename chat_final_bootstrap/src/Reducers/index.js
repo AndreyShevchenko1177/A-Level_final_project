@@ -52,6 +52,37 @@ function authReducer(state, action) {
         };
     }
 
+    // для корректной сортировки чатов по дате последнего сообщения
+    if (action.type === "UPDATE_CHAT_CREATEDAT") {
+        if (Array.isArray(state.chats)) {
+            for (let i in state.chats) {
+                if (state.chats[i]._id === action._chatId) {
+                    // надо пересобрать объект, чтобы React "почуствовал" изменения
+                    state.chats[i] = { ...state.chats[i], createdAt: action.lastMsgCreatedAt };
+                }
+            }
+        }
+
+        // теперь пересобрать массив, чтобы React "почуствовал" изменения
+        if (Array.isArray(state.chats)) {
+            state.chats = [...state.chats];
+        }
+
+        // ну и пересобрать state, чтобы React "почуствовал" изменения
+        return { ...state };
+    }
+
+    return state;
+}
+
+// счетчики общего числа сообщений в чатах
+function countReduser(state = {}, action) {
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
+
+    if (action.type === "NEW_COUNT") {
+        return { ...state, ...action.count };
+    }
+
     return state;
 }
 
@@ -69,6 +100,7 @@ function msgReduser(state = {}, action) {
 
     return state;
 }
+
 function newChatUsersReduser(state = {}, action) {
     // console.log(action);
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
@@ -142,6 +174,7 @@ export const store = createStore(
         msg: msgReduser,
         curChatId: currentChatIdReduser,
         newChatUsers: newChatUsersReduser,
+        countMsg: countReduser,
     }),
     applyMiddleware(thunk)
 );

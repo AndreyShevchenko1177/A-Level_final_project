@@ -193,7 +193,7 @@ const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
                                 )}
                             </div>
                         </Link>
-                        <div className="fs-4 fw-bolder ms-2">{`${title}`}</div>
+                        <div className="fs-5 fw-bolder ms-2">{`${title}`}</div>
                     </div>
                     {/* <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary"> */}
                     <span className="position-absolute bottom-0 end-0 rounded-pill bg-success">

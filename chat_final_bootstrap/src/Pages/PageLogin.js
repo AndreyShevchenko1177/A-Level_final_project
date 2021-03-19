@@ -21,7 +21,7 @@ const LoginForm = ({ onLogin = null, onRegistration = null, isLoggedIn, mode = "
 
     //FIXME: надо засунуть router в redux
     if (store.getState().auth && store.getState().auth.login && localStorage.authToken) {
-        history.push(`/main/${store.getState().auth.payloadId}`);
+        history.push(`/main`);
     }
 
     const clearHooks = () => {

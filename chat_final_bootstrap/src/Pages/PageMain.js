@@ -121,7 +121,7 @@ const PageMain = ({
                             <Sidebar />
                         </div>
                     </div>
-                    <div className="col-md-8">
+                    <div className="col-md-8 border border-3 rounded-3 shadow bg-gradient-light p-2">
                         <div className="pageMain_ChatMessages mb-2">
                             <div className="maxWidthForMsg">
                                 <ChatMessages _chatId={_chatId} />

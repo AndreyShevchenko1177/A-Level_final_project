@@ -103,6 +103,9 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
             // и поменять в store.auth.chats в соответствующем чате поле createdAt на данные
             // из поля createdAt последнего прибывшего сообщения
             // теперь store.auth.chats...createdAt будет говорить о дате последнего изменения в этом чате
+            // надо для сортировки списка чатов
+            // а ыообще надо "попросить" backend-ера внести в сущность Chat поле "lastModified"
+            // либо "lastMessageCreatedAt" - снимет кучу проблем
 
             // console.log("MessageFind", _chatId, messages.data.MessageFind[messages.data.MessageFind.length - 1].createdAt);
 
@@ -138,17 +141,6 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
             });
         }
     }
-};
-
-const messageCountByChatId = async (id) => {
-    let count = await gql(
-        `query MessageCountByChatId ($chatId:String){
-            MessageCount(query: $chatId)
-        }`,
-        { chatId: JSON.stringify([{ "chat._id": id }]) }
-    );
-
-    // if (!count.data.errors) setRes(count.data.MessageCount);
 };
 
 // получить все сообщения из чата с такм-то _id

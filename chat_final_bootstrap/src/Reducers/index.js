@@ -42,7 +42,8 @@ function authReducer(state, action) {
 
     if (action.type === "INFO") {
         // console.log("INFO **************** ", action.userInfo);
-        return {
+
+        let tempObj = {
             ...state,
             payload: action.userInfo.login,
             payloadId: action.userInfo._id,
@@ -50,17 +51,31 @@ function authReducer(state, action) {
             avatarUrl: action.userInfo.url,
             chats: action.userInfo.chats,
         };
+
+        // для сортировки чатов по дате
+        if (Array.isArray(tempObj.chats)) {
+            tempObj.chats = tempObj.chats.map((chat) => {
+                chat.lastModified = chat.createdAt;
+                return chat;
+            });
+        }
+
+        return { ...tempObj };
     }
 
     // для корректной сортировки чатов по дате последнего сообщения
-    if (action.type === "UPDATE_CHAT_CREATEDAT") {
+    if (action.type === "UPDATE_CHAT_LASTMODIFIED") {
         if (Array.isArray(state.chats)) {
             for (let i in state.chats) {
-                if (state.chats[i]._id === action._chatId) {
+                if (state.chats[i]._id === action._chatId && state.chats[i].lastModified < action.lastMsgCreatedAt) {
                     // надо пересобрать объект, чтобы React "почуствовал" изменения
-                    state.chats[i] = { ...state.chats[i], createdAt: action.lastMsgCreatedAt };
+                    state.chats[i] = { ...state.chats[i], lastModified: action.lastMsgCreatedAt };
                 }
             }
+        }
+
+        if (Array.isArray(state.chats)) {
+            state.chats.sort((a, b) => b.lastModified - a.lastModified);
         }
 
         // теперь пересобрать массив, чтобы React "почуствовал" изменения
@@ -102,7 +117,6 @@ function msgReduser(state = {}, action) {
 }
 
 function newChatUsersReduser(state = {}, action) {
-    // console.log(action);
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "ADD_USER_TO_CHAT_LIST") {

@@ -13,7 +13,7 @@ export const actionMsgInsertInHead = (msgArr) => {
 export const actionCurChatId = (curChatId) => ({ type: "CURRENTID", curChatId });
 
 export const actionUpdateChatCreatedAt = (_chatId, lastMsgCreatedAt) => ({
-    type: "UPDATE_CHAT_CREATEDAT",
+    type: "UPDATE_CHAT_LASTMODIFIED",
     _chatId,
     lastMsgCreatedAt,
 });

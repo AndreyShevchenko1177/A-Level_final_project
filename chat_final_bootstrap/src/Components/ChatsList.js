@@ -60,27 +60,9 @@ const ChatItem = ({ _id = "", avatar, title, currentChatId }) => {
 };
 
 const List = ({ arrayOfChats, userId, currentChatId }) => {
-    // console.log(arrayOfChats, msgsObj);
     // arrayOfChats - массив всех чатов пользователя
 
     if (!arrayOfChats) return <></>;
-
-    // сортировка массива чатов по полю createdAt
-    // у кого createdAt больше (свежее) - тот в начало массива
-    // надо "попросить" backend-ера внести в сущность Chat поле "lastModified"
-    // либо "lastMessageCreatedAt"
-
-    // arrayOfChats.sort((a, b) => {
-    //     if (!a.messages) return 1;
-    //     if (!b.messages) return -1;
-    //     return +b.messages[b.messages.length - 1].createdAt - +a.messages[a.messages.length - 1].createdAt;
-    // });
-
-    //FIXME:
-    arrayOfChats.sort((a, b) => b.createdAt - a.createdAt);
-
-    // console.log("chatsList - arrayOfChats.sort: ", arrayOfChats);
-    // console.log("chatsList - : ", currentChatId);
 
     return (
         <ul className="list-group" role="tablist">

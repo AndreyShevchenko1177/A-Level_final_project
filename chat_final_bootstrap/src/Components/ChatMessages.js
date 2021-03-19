@@ -87,6 +87,7 @@ const MessagesList = ({ messages, myId, chatId, getMoreMessages = null }) => {
     // console.log(isNeedMoreMessages.current, arrayOfMessages && arrayOfMessages.length);
 
     // скролл в самый низ при приходе новых сообщений, scrollIntoView({ behavior: "smooth" }) - плавно
+    // от плавности прийдется отказаться, так как успевает сработатьт запрос на чтение новой порции сообщений
     const scrollToBottom = () => {
         if (height - offset < 10) {
             messagesEndRef.current.scrollIntoView();
@@ -151,16 +152,8 @@ const CMessagesList = connect(
 const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
     if (chatInfo) chatInfo = chatInfo.filter((chat) => chat._id === _id);
 
-    // id чата,
-
-    // console.log("Messages - id - ", _id);
-    // console.log(
-    //     "Messages - - ",
-    //     !(messages && messages[_id] && messages[_id][0] && messages[_id][0].chat && messages[_id][0].chat._id)
-    // );
-
     let avatar = chatInfo && chatInfo[0] && chatInfo[0].avatar && chatInfo[0].avatar.url;
-    let title = chatInfo && chatInfo[0] && chatInfo[0].title.trim();
+    let title = chatInfo && chatInfo[0] && chatInfo[0].title && chatInfo[0].title.trim();
 
     useEffect(() => {
         if (

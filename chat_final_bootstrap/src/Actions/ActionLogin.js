@@ -49,7 +49,7 @@ export const actionUserInfo = (userId) => async (dispatch) => {
         dispatch(actionAuthInfo(userData.data.UserFindOne)); // получить доп инфу о юзере
         if (userData.data.UserFindOne.chats) {
             userData.data.UserFindOne.chats.forEach(async (chat) => {
-                // получить по 10 первых сообщений и каждого из моих чатов
+                // получить по 10 первых сообщений из каждого из моих чатов
                 await dispatch(actionSearchMessagesByChatId(chat._id));
             });
         }

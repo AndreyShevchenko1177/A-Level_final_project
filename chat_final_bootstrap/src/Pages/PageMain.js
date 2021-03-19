@@ -18,7 +18,6 @@ const MessageInput = ({ curChatId: { curChatId } = {}, messageUpsert }) => {
 
     // отправка по Enter
     const sendMsgByEnterKey = (e) => {
-        console.log(e);
         if (["NumpadEnter", "Enter"].includes(e.code) && !e.shiftKey && text.trim()) {
             sendMsg();
         }

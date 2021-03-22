@@ -29,11 +29,6 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
         }
     }, [searchUserStr]);
 
-    //FIXME: это для чего???? уже не помню и похоже не надо ))))
-    // useEffect(() => {
-    //     store.dispatch({ type: "CLEAR_USERS" });
-    // }, []);
-
     return (
         <div className="maxWidthPageMain">
             <div className="container-fluid">
@@ -41,9 +36,6 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
                     <div className="col-md-4">
                         <div className="maxWidthForSideBar shadow">
                             <div className="bg-light gradient shadow-sm border-2 rounded-3 flex-grow-1 pt-2">
-                                {/* <CUserInfo /> */}
-                                {/* <ButtonToMain /> */}
-                                {/* <ButtonCancel /> */}
                                 <h6 className="ms-2 fs-5">Choose members:</h6>
                                 <div className="p-2">
                                     <input
@@ -54,8 +46,6 @@ const PageNewChat = ({ doSearchUsers = null, match: { params: { _chatId = "" } =
                                         }}
                                     ></input>
                                 </div>
-
-                                {/* <h6 className="ms-2 fs-4">Choose members:</h6> */}
 
                                 <CAllUsersList searchUserStr={searchUserStr} />
                             </div>

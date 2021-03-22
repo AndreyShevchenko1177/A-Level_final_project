@@ -5,11 +5,61 @@ import logo from "../images//logo23.jpg";
 import { actionGetMessagesByChatId, actionSearchMessagesByChatId } from "../Actions";
 import ScrollableFeed from "react-scrollable-feed";
 import { urlUploadConst } from "../const";
+import history from "../history";
+import { Button, Form, Modal } from "react-bootstrap";
+
+const MediaItem = ({ mediaItem }) => {
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+
+    const handleShow = () => setShow(true);
+
+    let mediaUrl, mediaText;
+    if (mediaItem && mediaItem.url) mediaUrl = mediaItem.url;
+    if (mediaItem && mediaItem.text) mediaText = mediaItem.text;
+    return (
+        <>
+            <div className="MediaItem m-1">
+                <img src={`${urlUploadConst}/${mediaUrl}`} onClick={handleShow} />
+                {mediaText && <div> {`${mediaText}`}</div>}
+            </div>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <div className="modalImg border border-warning d-flex">
+                        <img src={`${urlUploadConst}/${mediaUrl}`} />
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </>
+    );
+};
+
+const Media = ({ media = null }) => {
+    return (
+        <>
+            {media && media.length && (
+                <>
+                    <div className="d-flex flex-wrap ">
+                        {/* {JSON.stringify(media, null, 4)} */}
+                        {media.map((mediaItem) => (
+                            <MediaItem key={mediaItem._id} mediaItem={mediaItem} />
+                        ))}
+                    </div>
+                </>
+            )}
+        </>
+    );
+};
 
 const MessageItem = ({
     _id,
     createdAt = 0,
     text = "",
+    media,
     owner: { _id: ownerId, login = "", nick = "", avatar },
     myId,
 }) => {
@@ -63,8 +113,8 @@ const MessageItem = ({
                 {/* <p>{`Login: ${login}, Nick: ${nick}, ownerId: ${ownerId}`}</p> */}
 
                 <div className="lh-sm mb-2 text-success fw-bolder">{`${nick}`}</div>
-                {/* <div className="text-dark fs-6 lh-sm mb-3">{text.replace(/\r?\n|\r/g, "\n")}</div> */}
-                <div className="text-dark fs-6 lh-sm mb-3">{text}</div>
+                <Media media={media} />
+                <div className="text-dark fs-6 lh-sm mb-3 text-wrap text-break">{text}</div>
 
                 {/* <span className="text-success">{`message id: ${_id}`}</span> */}
                 <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary">
@@ -84,7 +134,7 @@ const MessagesList = ({ messages, myId, chatId, getMoreMessages = null }) => {
     const isNeedMoreMessages = useRef(false);
 
     let arrayOfMessages = messages[chatId];
-    // console.log(isNeedMoreMessages.current, arrayOfMessages && arrayOfMessages.length);
+    // console.log("рисую компоненту- ", messages);
 
     // скролл в самый низ при приходе новых сообщений, scrollIntoView({ behavior: "smooth" }) - плавно
     // от плавности прийдется отказаться, так как успевает сработатьт запрос на чтение новой порции сообщений
@@ -129,6 +179,7 @@ const MessagesList = ({ messages, myId, chatId, getMoreMessages = null }) => {
     );
 };
 
+// другой вариант скрола
 // скролл вниз при новых сообщениях только если мы на этот момент уже были внизу внизу
 // const MessagesList = ({ arrayOfMessages }) => {
 //     return (
@@ -150,7 +201,11 @@ const CMessagesList = connect(
 )(MessagesList);
 
 const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
-    if (chatInfo) chatInfo = chatInfo.filter((chat) => chat._id === _id);
+    // _id чата
+
+    if (chatInfo && _id) chatInfo = chatInfo.filter((chat) => chat._id === _id);
+
+    if (!chatInfo || !chatInfo[0]) history.push("/");
 
     let avatar = chatInfo && chatInfo[0] && chatInfo[0].avatar && chatInfo[0].avatar.url;
     let title = chatInfo && chatInfo[0] && chatInfo[0].title && chatInfo[0].title.trim();
@@ -195,7 +250,6 @@ const Messages = ({ _id = "", chatInfo, messages, getMsg }) => {
                         </Link>
                         <div className="fs-5 fw-bolder ms-2">{`${title}`}</div>
                     </div>
-                    {/* <span className="position-absolute bottom-0 end-0  badge rounded-pill bg-secondary"> */}
                     <span className="position-absolute bottom-0 end-0 rounded-pill bg-success">
                         <Link to={`/newchat/${_id}`} className="noUnderLine text-light">
                             {/* {` _chatId: ${_id}`} */}

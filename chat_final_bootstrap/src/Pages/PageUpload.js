@@ -11,7 +11,7 @@ export const PageUpload = () => {
 
     function MyDropzone() {
         const onDrop = useCallback(async (acceptedFiles) => {
-            console.log("МАССИВ", acceptedFiles);
+            // console.log("МАССИВ", acceptedFiles);
 
             let reader = new FileReader();
 
@@ -27,23 +27,23 @@ export const PageUpload = () => {
 
             setFl(false);
 
-            // let aaryOfFatchs = acceptedFiles.map((file) => {
-            //     let dataSingl = new FormData();
-            //     dataSingl.set("media", file);
-            //     return fetch(`${urlUploadConst}/upload`, {
-            //         method: "POST",
-            //         headers: localStorage.authToken ? { Authorization: "Bearer " + localStorage.authToken } : {},
-            //         body: dataSingl,
-            //     }).then((res) => res.json());
-            // });
+            let aaryOfFatchs = acceptedFiles.map((file) => {
+                let dataSingl = new FormData();
+                dataSingl.set("media", file);
+                return fetch(`${urlUploadConst}/upload`, {
+                    method: "POST",
+                    headers: localStorage.authToken ? { Authorization: "Bearer " + localStorage.authToken } : {},
+                    body: dataSingl,
+                }).then((res) => res.json());
+            });
 
-            // resultArray.current = [];
+            resultArray.current = [];
 
-            // await Promise.all(aaryOfFatchs)
-            //     .then((responses) => responses.forEach((response) => resultArray.current.push(response)))
-            //     .catch((e) => alert("Произошла ошибка.", e));
+            await Promise.all(aaryOfFatchs)
+                .then((responses) => responses.forEach((response) => resultArray.current.push(response)))
+                .catch((e) => alert("Произошла ошибка.", e));
 
-            // console.log(resultArray.current);
+            console.log(resultArray.current);
 
             setFl(true);
         }, []);

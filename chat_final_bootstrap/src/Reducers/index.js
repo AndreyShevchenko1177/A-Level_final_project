@@ -3,7 +3,50 @@ import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import jwt_decode from "jwt-decode";
 import history from "../history";
-import { actionUserInfo } from "../Actions";
+import { actionUserInfo, countMsgInChat } from "../Actions";
+import { urlUploadConst } from "../const";
+
+export const socket = window.io(urlUploadConst);
+
+const actionSocketMessage = (msg) => ({ type: "SOCKET_MSG", msg });
+const actionSocketChat = (chat) => ({ type: "SOCKET_CHAT", chat });
+const actionSocketChatLeft = (chat_left) => ({ type: "SOCKET_CHAT_LEFT", chat_left });
+
+console.log("- socket start -");
+
+socket.on("jwt_ok", (data) => console.log("jwt_ok", data));
+socket.on("jwt_fail", (error) => console.log("jwt_fail", error));
+
+socket.on("msg", (msg) => {
+    console.log("soket msg - ", msg);
+    store.dispatch(actionSocketMessage(msg));
+});
+
+socket.on("chat", (chat) => {
+    console.log("soket chat - ", chat);
+    store.dispatch(actionSocketChat(chat));
+});
+
+socket.on("chat_left", (chat_left) => {
+    console.log("soket chat_left - ", chat_left);
+    store.dispatch(actionSocketChatLeft(chat_left));
+});
+
+// этот редьюсер как бы совсем не нужен
+// пусть побудет на период отладки
+function socketReducer(state = {}, action) {
+    if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
+
+    // console.log("-ACTION- : ", action);
+
+    if (["SOCKET_MSG", "SOCKET_CHAT", "SOCKET_CHAT_LEFT"].includes(action.type)) {
+        // console.log("-ACTION- : ", action);
+
+        return { ...state, ...action };
+    }
+
+    return state;
+}
 
 function authReducer(state, action) {
     if (state === undefined) {
@@ -18,7 +61,8 @@ function authReducer(state, action) {
     if (action.type === "LOGIN") {
         try {
             localStorage.authToken = action.jwt;
-            console.log("ЛОГИН", jwt_decode(action.jwt).sub.login);
+            socket.emit("jwt", localStorage.authToken);
+            // console.log("ЛОГИН", jwt_decode(action.jwt).sub.login);
             return {
                 login: true,
                 token: action.jwt,
@@ -52,7 +96,7 @@ function authReducer(state, action) {
             chats: action.userInfo.chats,
         };
 
-        // для сортировки чатов по дате
+        // для сортировки чатов по дате добавление поля lastModified
         if (Array.isArray(tempObj.chats)) {
             tempObj.chats = tempObj.chats.map((chat) => {
                 chat.lastModified = chat.createdAt;
@@ -74,6 +118,7 @@ function authReducer(state, action) {
             }
         }
 
+        // сортировка списка чатов согласно полю lastModified
         if (Array.isArray(state.chats)) {
             state.chats.sort((a, b) => b.lastModified - a.lastModified);
         }
@@ -87,11 +132,62 @@ function authReducer(state, action) {
         return { ...state };
     }
 
+    // пришло обновление чата
+    if (action.type === "SOCKET_CHAT") {
+        let newChat = {
+            _id: action.chat._id,
+            title: action.chat.title,
+            createdAt: action.chat.createdAt,
+            owner: action.chat.owner,
+            avatar: action.chat.avatar,
+            members: action.chat.members,
+            lastModified: action.chat.lastModified,
+        };
+
+        state.chats = state.chats.filter((chat) => {
+            return chat._id !== action.chat._id;
+        });
+
+        state.chats = [newChat, ...state.chats];
+
+        // обновить счетчик
+        countMsgInChat(action.chat._id);
+
+        return { ...state };
+    }
+
+    // выдвигаем чат с новым сообщением на 1-е место
+    // для всплытия этого чата на экране на самый верх
+    if (action.type === "SOCKET_MSG") {
+        let topChat;
+
+        if (Array.isArray(state.chats)) {
+            topChat = state.chats.find((el) => el._id === action.msg.chat._id);
+        }
+
+        // именно filter - чтобы удалить дубликаты, вдруг они там есть
+        state.chats = state.chats.filter((chat) => chat._id !== action.msg.chat._id);
+
+        state.chats = [topChat, ...state.chats];
+
+        return { ...state };
+    }
+
+    if (action.type === "SOCKET_CHAT_LEFT") {
+        state.chats = state.chats.filter((chat) => {
+            return chat._id !== action.chat_left._id;
+        });
+
+        state.chats = [...state.chats];
+
+        return { ...state };
+    }
+
     return state;
 }
 
 // счетчики общего числа сообщений в чатах
-function countReduser(state = {}, action) {
+function countReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "NEW_COUNT") {
@@ -101,7 +197,7 @@ function countReduser(state = {}, action) {
     return state;
 }
 
-function msgReduser(state = {}, action) {
+function msgReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "NEW_CHAT") {
@@ -113,10 +209,39 @@ function msgReduser(state = {}, action) {
         return { ...state, [key]: [...value, ...state[key]] };
     }
 
+    if (action.type === "SOCKET_MSG") {
+        let newMsgItem = {
+            _id: action.msg._id,
+            createdAt: action.msg.createdAt,
+            owner: {
+                _id: action.msg.owner._id,
+                login: action.msg.owner.login,
+                nick: action.msg.owner.nick,
+                avatar: { url: (action.msg.owner.avatar && action.msg.owner.avatar.url) || "" },
+            },
+            text: action.msg.text,
+            chat: {
+                _id: action.msg.chat._id,
+                title: action.msg.chat.title,
+                avatar: { url: (action.msg.chat.avatr && action.msg.chat.avatr.url) || "" },
+            },
+        };
+
+        if (action.msg.media && action.msg.media[0]) {
+            newMsgItem.media = [...action.msg.media];
+        }
+
+        // обновить счетчик
+        countMsgInChat(action.msg.chat._id);
+
+        return { ...state, ...{ [action.msg.chat._id]: [...state[action.msg.chat._id], newMsgItem] } };
+    }
+
     return state;
 }
 
-function newChatUsersReduser(state = {}, action) {
+// список пользователей для нового создаваемого чата
+function newChatUsersReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "ADD_USER_TO_CHAT_LIST") {
@@ -135,7 +260,7 @@ function newChatUsersReduser(state = {}, action) {
     return state;
 }
 
-function currentChatIdReduser(state = {}, action) {
+function currentChatIdReducer(state = {}, action) {
     if (["LOGOUT", "LOGIN"].includes(action.type)) return {};
 
     if (action.type === "CURRENTID") {
@@ -185,12 +310,13 @@ export const store = createStore(
     combineReducers({
         auth: authReducer,
         promise: promiseReducer,
-        msg: msgReduser,
-        curChatId: currentChatIdReduser,
-        newChatUsers: newChatUsersReduser,
-        countMsg: countReduser,
+        msg: msgReducer,
+        curChatId: currentChatIdReducer,
+        newChatUsers: newChatUsersReducer,
+        countMsg: countReducer,
+        socket: socketReducer,
     }),
     applyMiddleware(thunk)
 );
 
-store.subscribe(() => console.log(store.getState()));
+// store.subscribe(() => console.log(store.getState()));

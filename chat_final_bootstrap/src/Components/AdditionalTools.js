@@ -35,9 +35,6 @@ export const AdditionalTools = ({ _userId, onSearch = null }) => {
                 <i className="bi bi-chat-left-text"></i>
                 <span className="ms-2">New Chat</span>
             </Button>
-            {/* <Button className="gradient" variant="secondary btn-sm  m-2">
-                Join to another chat
-            </Button> */}
         </div>
     );
 };

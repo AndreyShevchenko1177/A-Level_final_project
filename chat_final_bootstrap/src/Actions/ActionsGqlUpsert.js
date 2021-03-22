@@ -4,9 +4,24 @@ import { urlUploadConst } from "../const";
 import { actionPromise } from "../Reducers";
 import { gql, actionSearchMessagesByChatId, actionUserInfo, actionAuthLogout } from "../Actions";
 import history from "../history";
+import { store } from "../Reducers";
 
-export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
-    // console.log("actionMessageUpsert --- ", text, chatId);
+export const actionMessageUpsert = ({ text, chatId, imgArray = [] }) => async (dispatch) => {
+    // console.log("actionMessageUpsert --- ", text, chatId, imgArray.current);
+
+    let messageData = {
+        text,
+        chat: {
+            _id: chatId,
+        },
+    };
+
+    if (imgArray.current[0]) {
+        messageData.media = imgArray.current.map((el) => ({
+            _id: el._id,
+        }));
+    }
+    // console.log(messageData);
 
     let msgData = await dispatch(
         actionPromise(
@@ -15,20 +30,27 @@ export const actionMessageUpsert = ({ text, chatId }) => async (dispatch) => {
                 `mutation MessageUpsert($messageData:MessageInput){
                     MessageUpsert(message: $messageData){
                         _id
+                        media{
+                            _id
+                            url
+                        }
                     }
                 }`,
-                { messageData: { text, chat: { _id: chatId } } }
+                { messageData }
             )
         )
     );
 
     // console.log("MessageUpsert - ", msgData);
 
-    if (msgData && msgData.data && msgData.data.MessageUpsert && msgData.data.MessageUpsert._id) {
-        dispatch(actionSearchMessagesByChatId(chatId));
+    if (msgData.errors && msgData.errors[0] && msgData.errors[0].message) {
+        // console.log(`Ошибка отправки сообщения: \nСкорее всего Вас удалили из чата...\n ${msgData.errors[0].message}`);
+        dispatch(actionUserInfo(store.getState().auth.payloadId));
+        history.push("/");
     }
 };
 
+// пока что это только привязка аватарки к чату
 const actionMediaUpsert = ({ chatId, mediaId }) => async (dispatch) => {
     let mediaData = await dispatch(
         actionPromise(
@@ -158,7 +180,6 @@ export const actionUserUpdate = ({ _id, login, nick, password, avaFile, isNeedLo
     if (!userUpserResult.errors) {
         if (isNeedLogout) {
             await dispatch(actionAuthLogout());
-            console.log("upsert success after actionLogin");
         } else {
             await dispatch(actionUserInfo(_id));
         }

@@ -160,10 +160,9 @@ const UserInfo = ({ myId, avatarUrl, login, nick, doUpdate = null }) => {
                                 ref={inpNickRef}
                                 onChange={(e) => {
                                     setInpNick(e.target.value);
-                                    setIsNeedLogout(true);
+                                    // setIsNeedLogout(true);
                                 }}
                             />
-                            {/* <Form.Text className="text-muted">muted text</Form.Text> */}
                         </Form.Group>
 
                         <Form.Group controlId="fromBasicPassword" className="mb-4">
@@ -181,8 +180,6 @@ const UserInfo = ({ myId, avatarUrl, login, nick, doUpdate = null }) => {
                         </Form.Group>
 
                         <Form.Group>
-                            {/* <Form.Check type="checkbox" label="Remeber me" /> */}
-                            {/* <Button onClick={handleClose}>Close</Button> */}
                             <ButtonCancel cansel={handleClose} />
                             <Button
                                 className="gradient rounded-3 ms-2 mb-2"

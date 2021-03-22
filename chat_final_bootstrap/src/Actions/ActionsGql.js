@@ -75,12 +75,12 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
                             avatar{url}
                         }
                         text
-                        createdAt
                         chat {
                             _id
                             title
                             avatar{url}
                         }
+                        media {url text _id}
                     }
                 }`,
                 { searchMsgStr: JSON.stringify([searchObj, { sort: [{ _id: -1 }], skip: [skip], limit: [limit] }]) }
@@ -104,7 +104,7 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
             // из поля createdAt последнего прибывшего сообщения
             // теперь store.auth.chats...createdAt будет говорить о дате последнего изменения в этом чате
             // надо для сортировки списка чатов
-            // а ыообще надо "попросить" backend-ера внести в сущность Chat поле "lastModified"
+            // а вообще надо "попросить" backend-ера внести в сущность Chat поле "lastModified"
             // либо "lastMessageCreatedAt" - снимет кучу проблем
 
             // console.log("MessageFind", _chatId, messages.data.MessageFind[messages.data.MessageFind.length - 1].createdAt);
@@ -117,29 +117,33 @@ export const actionSearchMessagesByChatId = (_chatId, skip = 0, searchStr = "", 
             );
 
             // подсчет количества сообщений в чате с таким-то id
-            let count = await gql(
-                `query MessageCountByChatId ($chatId:String){
+            countMsgInChat(_chatId);
+        }
+    } else {
+        dispatch({
+            type: "NEW_COUNT",
+            count: {
+                [_chatId]: 0,
+            },
+        });
+    }
+};
+
+export const countMsgInChat = async (_chatId) => {
+    let count = await gql(
+        `query MessageCountByChatId ($chatId:String){
                     MessageCount(query: $chatId)
                 }`,
-                { chatId: JSON.stringify([{ "chat._id": _chatId }]) }
-            );
+        { chatId: JSON.stringify([{ "chat._id": _chatId }]) }
+    );
 
-            if (!count.data.errors) {
-                dispatch({
-                    type: "NEW_COUNT",
-                    count: {
-                        [_chatId]: count.data.MessageCount,
-                    },
-                });
-            }
-        } else {
-            dispatch({
-                type: "NEW_COUNT",
-                count: {
-                    [_chatId]: 0,
-                },
-            });
-        }
+    if (!count.data.errors) {
+        store.dispatch({
+            type: "NEW_COUNT",
+            count: {
+                [_chatId]: count.data.MessageCount,
+            },
+        });
     }
 };
 
@@ -201,14 +205,11 @@ export const actionSearchChat = (_userId = "", str = "") => async (dispatch) => 
             )
         )
     );
-    console.log("actionSearchChat - searchData:", searchData);
+    // console.log("actionSearchChat - searchData:", searchData);
 };
 
 export const actionAllUsersFind = (skip = 0, str = "") => async (dispatch) => {
     str = toQuery(str);
-
-    //FIXME:
-    // console.log(str);
 
     let users = await dispatch(
         actionPromise(
@@ -232,35 +233,3 @@ export const actionAllUsersFind = (skip = 0, str = "") => async (dispatch) => {
         // console.log("actionUserFind - UserFind:", users);
     }
 };
-
-// export const actionUsersConcat = (userArr) => {
-//     // console.log("actionUsersConcat - ", JSON.stringify(userArr, null, 4));
-//     // console.log("actionUsersConcat - ", userArr);
-//     return { type: "NEW_USER_PART", userArr };
-// };
-
-// это НИЗЗЯ!! это - затянуть всех пользователей сети к себе на Front!!
-
-// export const actionGetAllUsers = () => async (dispatch) => {
-//     let userCount = await dispatch(
-//         actionPromise(
-//             "userCount",
-//             gql(
-//                 `query UsersCount{
-//                     UserCount(query:"[{}]")
-//                 }`
-//             )
-//         )
-//     );
-//     // console.log("actionUserCount - userCount:", userCount.data.UserCount);
-//     if (!userCount.errors) {
-//         userCount = userCount.data.UserCount;
-//         // console.log("actionUserCount - userCount:", userCount);
-
-//         for (let i = 0; i < userCount; i += 100) {
-//             // console.log("++++++++", i);
-//             await actionAllUsersFind(i)(dispatch);
-//             dispatch(actionUsersConcat(store.getState().promise.UserFind.payload.data.UserFind));
-//         }
-//     }
-// };

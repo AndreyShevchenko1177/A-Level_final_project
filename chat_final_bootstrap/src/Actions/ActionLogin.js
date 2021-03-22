@@ -45,8 +45,8 @@ export const actionUserInfo = (userId) => async (dispatch) => {
 
     // console.log("UserFindOne - ##########", userData.data.UserFindOne);
 
-    if (userData && userData.data.UserFindOne) {
-        dispatch(actionAuthInfo(userData.data.UserFindOne)); // получить доп инфу о юзере
+    if (userData && userData.data && userData.data.UserFindOne) {
+        dispatch(actionAuthInfo(userData.data.UserFindOne)); // занести доп инфу Redax
         if (userData.data.UserFindOne.chats) {
             userData.data.UserFindOne.chats.forEach(async (chat) => {
                 // получить по 10 первых сообщений из каждого из моих чатов

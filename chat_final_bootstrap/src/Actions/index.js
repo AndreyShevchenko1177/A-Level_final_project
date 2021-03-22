@@ -5,6 +5,7 @@ import {
     actionGetMessagesByChatId,
     actionSearchChat,
     actionAllUsersFind,
+    countMsgInChat,
 } from "./ActionsGql";
 import { actionMsgNewChat, actionCurChatId, actionMsgInsertInHead, actionUpdateChatCreatedAt } from "./ActionsMsg";
 import { actionAddUserToChatList, actionDelUserFromChatList, actionNewChatList } from "./ActionsChatUsers";
@@ -31,4 +32,5 @@ export {
     actionMessageUpsert,
     actionUserUpdate,
     actionUpdateChatCreatedAt,
+    countMsgInChat,
 };

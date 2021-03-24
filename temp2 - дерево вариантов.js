@@ -1,3 +1,5 @@
+//
+
 let testArr = [
     ["USA", "Mexico"],
     ["Green", "Red", "Blue"],
@@ -92,3 +94,10 @@ let testArr = [
     } while ((indexes = inc(indexes)));
     return result;
 })();
+
+for (let el of notes) {
+    let d = document.createelement("div");
+    body.append(d);
+    d.append(el.text);
+    d.classList.add("uk-table");
+}

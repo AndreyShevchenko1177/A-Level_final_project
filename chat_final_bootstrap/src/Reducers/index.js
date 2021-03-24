@@ -234,7 +234,11 @@ function msgReducer(state = {}, action) {
         // обновить счетчик
         countMsgInChat(action.msg.chat._id);
 
-        return { ...state, ...{ [action.msg.chat._id]: [...state[action.msg.chat._id], newMsgItem] } };
+        if (state[action.msg.chat._id]) {
+            return { ...state, ...{ [action.msg.chat._id]: [...state[action.msg.chat._id], newMsgItem] } };
+        }
+
+        return { ...state, ...{ [action.msg.chat._id]: newMsgItem } };
     }
 
     return state;
@@ -319,4 +323,4 @@ export const store = createStore(
     applyMiddleware(thunk)
 );
 
-// store.subscribe(() => console.log(store.getState()));
+store.subscribe(() => console.log(store.getState()));

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./icons/bootstrap-icons.css";
 import "./App.scss";
@@ -18,6 +18,7 @@ import { CPageMain, PageLogin, CPageNewChat, PageUpload, PageAbout, CPageSearch 
 import { actionFindChatsByUserId } from "./Actions";
 import { urlUploadConst } from "./const";
 import { store } from "./Reducers";
+import { Button } from "bootstrap";
 
 const PageNotFound = () => {
     setTimeout(() => {
@@ -29,6 +30,24 @@ const PageNotFound = () => {
         </div>
     );
 };
+
+// const Proba111 = () => {
+//     const refLink = useRef(null);
+//     const [check, setCheck] = useState(true);
+//     const [inp, setInp] = useState("");
+
+//     return (
+//         <>
+//             <input checked={check} type="checkbox" onClick={(e) => setCheck(e.target.checked)}></input>
+//             {check && (
+//                 <div>
+//                     <input value={inp} ref={refLink} onChange={(e) => setInp(e.target.value)}></input>
+//                     <button onClick={(e) => console.log(refLink.current.value)}>CLICK</button>
+//                 </div>
+//             )}
+//         </>
+//     );
+// };
 
 const App = () => {
     return (
@@ -45,6 +64,7 @@ const App = () => {
                         <Route path="/" component={PageLogin} exact />
                         <Route path="/main/" component={CPageMain} exact />
                         <Route path="/main/:_chatId" component={CPageMain} exact />
+                        <Route path="/111" component={Proba111} exact />
                         {/* <Route path="/search/" component={CPageSearch} exact /> */}
 
                         <Route component={PageNotFound} exact />

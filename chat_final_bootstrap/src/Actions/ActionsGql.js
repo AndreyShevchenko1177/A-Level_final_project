@@ -19,6 +19,21 @@ const getGQL = (url) => (query, variables = {}) => {
 
 export const gql = getGQL(urlConst);
 
+// {
+//   "data": {
+//     "UserUpsert": {
+//       "_id": "608e6d15018204157413dde3",
+//       "createdAt": "1619946773000",
+//       "login": "ads",
+//       "nick": "adsnick",
+//       "acl": [
+//         "608e6d15018204157413dde3",
+//         "user"
+//       ]
+//     }
+//   }
+// }
+
 const toQuery = (str, fields = ["title", "text", "login", "nick", '"_id"']) => {
     str = str.replace(/ +/g, " ").trim(); // "/ +/g" - оставляет только по одному пробелу в последовательностях пробелов
     str = "/" + str.split(" ").join("|") + "/";

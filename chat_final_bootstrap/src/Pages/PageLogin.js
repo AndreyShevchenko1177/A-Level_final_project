@@ -171,6 +171,7 @@ const CLoginForm = connect((s) => ({ isLoggedIn: s.auth.login, mode: "Login" }),
     onLogin: actionLogin,
     onRegistration: actionRegistration,
 })(LoginForm);
+
 // prettier-ignore
 
 export const PageLogin = () => (
